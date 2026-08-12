@@ -10,12 +10,12 @@
   }
 
   body {
-    @apply bg-white text-ink-900 antialiased;
+    @apply bg-navy text-slate-100 antialiased;
     font-feature-settings: 'cv11', 'ss01';
   }
 
   h1, h2, h3, h4 {
-    @apply font-bold text-ink-900 tracking-tight;
+    @apply font-bold text-slate-100 tracking-tight;
   }
 
   a {
@@ -32,53 +32,48 @@
     @apply max-w-content mx-auto px-5 sm:px-8;
   }
 
-  .gradient-text {
-    @apply text-accent;
-  }
-
   .card {
-    @apply bg-white border border-ink-100 rounded-2xl overflow-hidden transition-all duration-300;
+    @apply bg-navy-50 border border-navy-200 rounded-lg overflow-hidden transition-all duration-300;
   }
 
   .card:hover {
-    @apply border-ink-200 shadow-sm;
-    transform: translateY(-1px);
+    @apply border-accent/40;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-white bg-accent transition-all duration-200 hover:bg-accent-dark;
+    @apply inline-flex items-center justify-center px-6 py-3 rounded font-semibold text-navy bg-accent transition-all duration-200 hover:bg-accent-dark;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-ink-900 bg-ink-50 border border-ink-200 transition-all duration-200 hover:bg-ink-100;
+    @apply inline-flex items-center justify-center px-6 py-3 rounded font-semibold text-accent border border-accent/30 hover:bg-accent/10 transition-all duration-200;
   }
 
   .tag {
-    @apply inline-block px-3 py-1 rounded-full text-xs font-medium;
+    @apply inline-block px-3 py-1 rounded text-xs font-medium;
   }
 
   .ad-container {
-    @apply my-8 flex items-center justify-center min-h-[90px] rounded-xl border border-ink-100 bg-ink-50/50;
+    @apply my-8 flex items-center justify-center min-h-[90px] rounded-lg border border-navy-200 bg-navy-50/50;
   }
 
   .prose-content p {
-    @apply mb-5 text-ink-700 leading-[1.8] text-[17px];
+    @apply mb-5 text-slate-300 leading-[1.8] text-[17px];
   }
 
   .prose-content h2 {
-    @apply text-2xl mt-12 mb-4 font-bold;
+    @apply text-2xl mt-12 mb-4 font-bold text-slate-100;
   }
 
   .prose-content h3 {
-    @apply text-xl mt-8 mb-3 font-bold;
+    @apply text-xl mt-8 mb-3 font-bold text-slate-100;
   }
 
   .prose-content ul {
-    @apply mb-5 ml-6 list-disc space-y-2 text-ink-700 text-[17px] leading-[1.8];
+    @apply mb-5 ml-6 list-disc space-y-2 text-slate-300 text-[17px] leading-[1.8];
   }
 
   .prose-content strong {
-    @apply text-ink-900 font-semibold;
+    @apply text-slate-100 font-semibold;
   }
 
   .prose-content a {
@@ -86,34 +81,32 @@
   }
 
   .prose-content blockquote {
-    @apply border-l-2 border-accent pl-5 italic text-ink-500 my-6;
+    @apply border-l-2 border-accent pl-5 italic text-slate-400 my-6;
   }
 
   .prose-content code {
-    @apply px-1.5 py-0.5 rounded-md bg-ink-50 text-ink-900 text-[15px] font-mono;
+    @apply px-1.5 py-0.5 rounded bg-navy-100 text-accent text-[15px] font-mono;
   }
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0A192F;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d2d2d7;
+  background: #233554;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a1a1a6;
+  background: #2D4373;
 }
 
-/* Selection */
 ::selection {
-  background: #FF6B35;
-  color: white;
+  background: #64FFDA;
+  color: #0A192F;
 }

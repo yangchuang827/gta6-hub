@@ -4,46 +4,42 @@ import { categories, siteConfig } from '@data/articles';
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 z-50 border-b border-ink-100 bg-white/80 backdrop-blur-xl">
+<header class="sticky top-0 z-50 border-b border-navy-200 bg-navy/90 backdrop-blur-xl">
   <div class="container-page">
     <div class="flex h-16 items-center justify-between">
-      <!-- Logo -->
       <a href="/" class="flex items-center gap-1.5">
-        <span class="text-xl font-extrabold tracking-tight text-ink-900">GTA6</span>
+        <span class="text-xl font-extrabold tracking-tight text-slate-100">GTA6</span>
         <span class="text-xl font-extrabold tracking-tight text-accent">Hub</span>
       </a>
 
-      <!-- Desktop Nav -->
       <nav class="hidden lg:flex items-center gap-1">
         <a
           href="/"
-          class={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${currentPath === '/' ? 'text-accent' : 'text-ink-500 hover:text-ink-900'}`}
+          class={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentPath === '/' ? 'text-accent' : 'text-slate-300 hover:text-slate-100'}`}
         >
           首页
         </a>
         {categories.slice(0, 5).map((cat) => (
           <a
             href={`/category/${cat.slug}`}
-            class={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${currentPath === `/category/${cat.slug}` ? 'text-accent' : 'text-ink-500 hover:text-ink-900'}`}
+            class={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentPath === `/category/${cat.slug}` ? 'text-accent' : 'text-slate-300 hover:text-slate-100'}`}
           >
             {cat.name}
           </a>
         ))}
       </nav>
 
-      <!-- Right Actions -->
       <div class="flex items-center gap-3">
         <a
           href="/news"
-          class="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white bg-ink-900 hover:bg-ink-700 transition-colors"
+          class="hidden sm:inline-flex items-center px-4 py-2 rounded text-sm font-semibold text-navy bg-accent hover:bg-accent-dark transition-colors"
         >
           全部资讯
         </a>
 
-        <!-- Mobile Menu Toggle -->
         <button
           id="menu-toggle"
-          class="lg:hidden p-2 rounded-lg text-ink-500 hover:text-ink-900 hover:bg-ink-50"
+          class="lg:hidden p-2 rounded text-slate-300 hover:text-accent hover:bg-navy-50"
           aria-label="菜单"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,19 +50,18 @@ const currentPath = Astro.url.pathname;
     </div>
   </div>
 
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden lg:hidden border-t border-ink-100 bg-white">
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-navy-200 bg-navy">
     <nav class="container-page py-4 flex flex-col gap-1">
-      <a href="/" class="px-3 py-2 rounded-lg text-sm font-medium text-ink-500 hover:text-ink-900 hover:bg-ink-50">首页</a>
+      <a href="/" class="px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-accent hover:bg-navy-50">首页</a>
       {categories.map((cat) => (
         <a
           href={`/category/${cat.slug}`}
-          class="px-3 py-2 rounded-lg text-sm font-medium text-ink-500 hover:text-ink-900 hover:bg-ink-50"
+          class="px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-accent hover:bg-navy-50"
         >
           {cat.name}
         </a>
       ))}
-      <a href="/news" class="px-3 py-2 rounded-lg text-sm font-semibold text-white bg-ink-900 mt-2 text-center">全部资讯</a>
+      <a href="/news" class="px-3 py-2 rounded text-sm font-semibold text-navy bg-accent mt-2 text-center">全部资讯</a>
     </nav>
   </div>
 </header>

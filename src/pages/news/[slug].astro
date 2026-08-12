@@ -2,7 +2,6 @@
 import { marked } from 'marked';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import AdSlot from '@components/AdSlot.astro';
-import ArticleCard from '@components/ArticleCard.astro';
 import { articles, categories, siteConfig } from '@data/articles';
 
 export function getStaticPaths() {
@@ -31,19 +30,17 @@ const updatedStr = article.updated
     })
   : null;
 
-// Render markdown to HTML
 const contentHtml = marked.parse(article.content, { async: false });
 
-// Subtle tint for article header
 const tints: Record<string, string> = {
-  'release-date': 'bg-orange-50',
-  'trailer-2': 'bg-purple-50',
-  'map-size': 'bg-cyan-50',
-  'characters': 'bg-rose-50',
-  'gameplay': 'bg-green-50',
-  'pc-requirements': 'bg-blue-50',
+  'release-date': 'bg-cyan-500/10',
+  'trailer-2': 'bg-purple-500/10',
+  'map-size': 'bg-emerald-500/10',
+  'characters': 'bg-rose-500/10',
+  'gameplay': 'bg-blue-500/10',
+  'pc-requirements': 'bg-amber-500/10',
 };
-const tint = tints[article.image] || 'bg-ink-50';
+const tint = tints[article.image] || 'bg-navy-100';
 ---
 
 <BaseLayout
@@ -54,31 +51,30 @@ const tint = tints[article.image] || 'bg-ink-50';
   modifiedTime={article.updated ? new Date(article.updated).toISOString() : undefined}
   author={article.author}
 >
-  <!-- Article Header -->
-  <section class={`border-b border-ink-100 ${tint}`}>
+  <section class={`border-b border-navy-200 ${tint}`}>
     <div class="container-page py-12 md:py-16">
       <div class="max-w-3xl">
         {category && (
           <a href={`/category/${category.slug}`} class="inline-block mb-4">
-            <span class="tag bg-white/80 text-ink-700 border border-ink-100">{category.name}</span>
+            <span class="tag bg-navy/60 text-accent border border-accent/20">{category.name}</span>
           </a>
         )}
-        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-ink-900 leading-tight mb-4">
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-100 leading-tight mb-4">
           {article.title}
         </h1>
-        <p class="text-lg text-ink-500 leading-relaxed mb-6">{article.description}</p>
-        <div class="flex flex-wrap items-center gap-4 text-sm text-ink-400">
+        <p class="text-lg text-slate-300 leading-relaxed mb-6">{article.description}</p>
+        <div class="flex flex-wrap items-center gap-4 text-sm text-slate-400">
           <span class="flex items-center gap-2">
-            <span class="w-8 h-8 rounded-full bg-ink-900 flex items-center justify-center text-white text-xs font-bold">
+            <span class="w-8 h-8 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center text-accent text-xs font-bold">
               {article.author.charAt(0)}
             </span>
             {article.author}
           </span>
-          <span class="w-1 h-1 rounded-full bg-ink-200"></span>
+          <span class="w-1 h-1 rounded-full bg-slate-400"></span>
           <span>{dateStr}</span>
           {updatedStr && (
             <>
-              <span class="w-1 h-1 rounded-full bg-ink-200"></span>
+              <span class="w-1 h-1 rounded-full bg-slate-400"></span>
               <span>更新于 {updatedStr}</span>
             </>
           )}
@@ -87,24 +83,20 @@ const tint = tints[article.image] || 'bg-ink-50';
     </div>
   </section>
 
-  <!-- Article Body -->
   <div class="container-page py-12">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-      <!-- Main Content -->
       <article class="lg:col-span-2">
         <div class="prose-content max-w-none" set:html={contentHtml} />
 
-        <!-- In-article Ad -->
         <AdSlot slot="5555555555" format="auto" label="文章内广告" />
 
-        <!-- Share Buttons -->
-        <div class="mt-10 pt-8 border-t border-ink-100 flex items-center gap-4">
-          <span class="text-sm text-ink-400">分享：</span>
+        <div class="mt-10 pt-8 border-t border-navy-200 flex items-center gap-4">
+          <span class="text-sm text-slate-400">分享：</span>
           <a
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(siteConfig.url + '/news/' + article.slug)}`}
             target="_blank"
             rel="noopener"
-            class="w-10 h-10 flex items-center justify-center rounded-full bg-ink-50 border border-ink-100 text-ink-500 hover:text-accent hover:border-accent transition-colors"
+            class="w-10 h-10 flex items-center justify-center rounded bg-navy-50 border border-navy-200 text-slate-300 hover:text-accent hover:border-accent/40 transition-colors"
           >
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           </a>
@@ -112,45 +104,40 @@ const tint = tints[article.image] || 'bg-ink-50';
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(siteConfig.url + '/news/' + article.slug)}`}
             target="_blank"
             rel="noopener"
-            class="w-10 h-10 flex items-center justify-center rounded-full bg-ink-50 border border-ink-100 text-ink-500 hover:text-accent hover:border-accent transition-colors"
+            class="w-10 h-10 flex items-center justify-center rounded bg-navy-50 border border-navy-200 text-slate-300 hover:text-accent hover:border-accent/40 transition-colors"
           >
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           </a>
         </div>
       </article>
 
-      <!-- Sidebar -->
       <aside class="lg:col-span-1">
         <div class="sticky top-20 space-y-8">
-          <!-- Sidebar Ad -->
           <div>
-            <h3 class="text-xs font-semibold text-ink-400 uppercase tracking-wider mb-3">赞助</h3>
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">赞助</h3>
             <AdSlot slot="6666666666" format="rectangle" label="侧边栏广告" className="min-h-[250px]" />
           </div>
 
-          <!-- Related Articles -->
           {relatedArticles.length > 0 && (
             <div>
-              <h3 class="text-xs font-semibold text-ink-400 uppercase tracking-wider mb-4">相关文章</h3>
+              <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">相关文章</h3>
               <div class="space-y-4">
                 {relatedArticles.map((rel) => (
                   <a href={`/news/${rel.slug}`} class="block group">
-                    <h4 class="text-sm font-medium text-ink-900 group-hover:text-accent line-clamp-2 transition-colors mb-1">{rel.title}</h4>
-                    <span class="text-xs text-ink-400">{new Date(rel.date).toLocaleDateString('zh-CN')}</span>
+                    <h4 class="text-sm font-medium text-slate-100 group-hover:text-accent line-clamp-2 transition-colors mb-1">{rel.title}</h4>
+                    <span class="text-xs text-slate-400">{new Date(rel.date).toLocaleDateString('zh-CN')}</span>
                   </a>
                 ))}
               </div>
             </div>
           )}
 
-          <!-- Bottom Sidebar Ad -->
           <AdSlot slot="7777777777" format="vertical" label="侧边栏广告" />
         </div>
       </aside>
     </div>
   </div>
 
-  <!-- Bottom Ad -->
   <div class="container-page pb-12">
     <AdSlot slot="8888888888" label="底部广告" />
   </div>

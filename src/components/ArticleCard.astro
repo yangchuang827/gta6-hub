@@ -15,45 +15,42 @@ const dateStr = new Date(article.date).toLocaleDateString('zh-CN', {
   day: 'numeric',
 });
 
-// Subtle background tint per article
 const tints: Record<string, string> = {
-  'release-date': 'bg-orange-50',
-  'trailer-2': 'bg-purple-50',
-  'map-size': 'bg-cyan-50',
-  'characters': 'bg-rose-50',
-  'gameplay': 'bg-green-50',
-  'pc-requirements': 'bg-blue-50',
+  'release-date': 'bg-cyan-500/10',
+  'trailer-2': 'bg-purple-500/10',
+  'map-size': 'bg-emerald-500/10',
+  'characters': 'bg-rose-500/10',
+  'gameplay': 'bg-blue-500/10',
+  'pc-requirements': 'bg-amber-500/10',
 };
-const tint = tints[article.image] || 'bg-ink-50';
+const tint = tints[article.image] || 'bg-navy-100';
 ---
 
 <article class={`card group ${featured ? 'md:col-span-2' : ''}`}>
   <a href={`/news/${article.slug}`} class="block">
-    <!-- Visual Header -->
-    <div class={`relative h-44 ${featured ? 'md:h-56' : ''} ${tint} overflow-hidden`}>
+    <div class={`relative h-44 ${featured ? 'md:h-56' : ''} ${tint} overflow-hidden border-b border-navy-200`}>
       <div class="absolute inset-0 flex items-center justify-center">
-        <span class="text-6xl font-extrabold text-ink-900/5 tracking-tighter select-none">
+        <span class="text-6xl font-extrabold text-slate-100/5 tracking-tighter select-none">
           GTA6
         </span>
       </div>
       {category && (
-        <span class="absolute top-3 left-3 tag bg-white/90 text-ink-700 border border-ink-100">
+        <span class="absolute top-3 left-3 tag bg-navy/80 text-accent border border-accent/20">
           {category.name}
         </span>
       )}
     </div>
 
-    <!-- Content -->
     <div class="p-5">
-      <h3 class={`font-bold text-ink-900 leading-snug mb-2 group-hover:text-accent transition-colors ${featured ? 'text-xl' : 'text-base'}`}>
+      <h3 class={`font-bold text-slate-100 leading-snug mb-2 group-hover:text-accent transition-colors ${featured ? 'text-xl' : 'text-base'}`}>
         {article.title}
       </h3>
-      <p class="text-sm text-ink-500 line-clamp-2 mb-4 leading-relaxed">
+      <p class="text-sm text-slate-300 line-clamp-2 mb-4 leading-relaxed">
         {article.description}
       </p>
-      <div class="flex items-center gap-3 text-xs text-ink-400">
+      <div class="flex items-center gap-3 text-xs text-slate-400">
         <span>{dateStr}</span>
-        <span class="w-1 h-1 rounded-full bg-ink-200"></span>
+        <span class="w-1 h-1 rounded-full bg-slate-400"></span>
         <span>{article.author}</span>
       </div>
     </div>

@@ -11,15 +11,15 @@ const popularArticles = articles.slice(2, 5);
 
 <BaseLayout>
   <!-- Hero Section -->
-  <section class="border-b border-ink-100">
+  <section class="border-b border-navy-200">
     <div class="container-page py-20 md:py-28">
-      <span class="inline-block px-3 py-1 rounded-full bg-accent-bg text-accent text-xs font-semibold mb-6">
+      <span class="inline-block px-3 py-1 rounded bg-accent-bg text-accent text-xs font-semibold mb-6 border border-accent/20">
         Rockstar Games 官方确认 2025 年秋季发售
       </span>
-      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1] max-w-3xl">
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1] max-w-3xl text-slate-100">
         追踪 GTA6 的<br />每一个动态
       </h1>
-      <p class="text-lg md:text-xl text-ink-500 max-w-2xl mb-10 leading-relaxed">
+      <p class="text-lg md:text-xl text-slate-300 max-w-2xl mb-10 leading-relaxed">
         {siteConfig.description}
       </p>
       <div class="flex flex-wrap items-center gap-3">
@@ -41,7 +41,7 @@ const popularArticles = articles.slice(2, 5);
   <!-- Featured Articles -->
   <section class="container-page py-16">
     <div class="flex items-center justify-between mb-8">
-      <h2 class="text-2xl font-bold tracking-tight">精选资讯</h2>
+      <h2 class="text-2xl font-bold tracking-tight text-slate-100">精选资讯</h2>
       <a href="/news" class="text-sm text-accent hover:text-accent-dark font-medium">查看全部 &rarr;</a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -59,7 +59,7 @@ const popularArticles = articles.slice(2, 5);
   <!-- Latest News -->
   <section class="container-page py-16">
     <div class="flex items-center justify-between mb-8">
-      <h2 class="text-2xl font-bold tracking-tight">最新动态</h2>
+      <h2 class="text-2xl font-bold tracking-tight text-slate-100">最新动态</h2>
       <a href="/news" class="text-sm text-accent hover:text-accent-dark font-medium">更多 &rarr;</a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -70,21 +70,21 @@ const popularArticles = articles.slice(2, 5);
   </section>
 
   <!-- Categories Grid -->
-  <section class="bg-ink-50/50 border-y border-ink-100">
+  <section class="bg-navy-50/30 border-y border-navy-200">
     <div class="container-page py-16">
-      <h2 class="text-2xl font-bold tracking-tight mb-8">浏览分类</h2>
+      <h2 class="text-2xl font-bold tracking-tight text-slate-100 mb-8">浏览分类</h2>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {categories.map((cat) => (
           <a
             href={`/category/${cat.slug}`}
-            class="card p-5 text-center group hover:border-ink-200"
+            class="card p-5 text-center group"
           >
-            <div class={`w-10 h-10 mx-auto mb-3 rounded-lg bg-${cat.color}-50 flex items-center justify-center`}>
-              <span class={`text-${cat.color}-600 text-sm font-bold`}>
+            <div class={`w-10 h-10 mx-auto mb-3 rounded-lg bg-${cat.color}-500/10 border border-${cat.color}-500/30 flex items-center justify-center`}>
+              <span class={`text-${cat.color}-400 text-sm font-bold`}>
                 {cat.name.charAt(0)}
               </span>
             </div>
-            <span class="text-sm font-medium text-ink-700 group-hover:text-ink-900">{cat.name}</span>
+            <span class="text-sm font-medium text-slate-300 group-hover:text-accent">{cat.name}</span>
           </a>
         ))}
       </div>
@@ -95,16 +95,16 @@ const popularArticles = articles.slice(2, 5);
   <section class="container-page py-16">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
       <div class="lg:col-span-2">
-        <h2 class="text-2xl font-bold tracking-tight mb-8">热门阅读</h2>
+        <h2 class="text-2xl font-bold tracking-tight text-slate-100 mb-8">热门阅读</h2>
         <div class="space-y-5">
           {popularArticles.map((article, index) => (
             <a href={`/news/${article.slug}`} class="card p-5 flex items-start gap-5 group">
-              <span class="text-3xl font-extrabold text-ink-200 flex-shrink-0 w-10">
+              <span class="text-3xl font-extrabold text-slate-400/30 flex-shrink-0 w-10 font-mono">
                 {String(index + 1).padStart(2, '0')}
               </span>
               <div>
-                <h3 class="font-semibold text-ink-900 group-hover:text-accent transition-colors mb-1">{article.title}</h3>
-                <p class="text-sm text-ink-500 line-clamp-1">{article.description}</p>
+                <h3 class="font-semibold text-slate-100 group-hover:text-accent transition-colors mb-1">{article.title}</h3>
+                <p class="text-sm text-slate-300 line-clamp-1">{article.description}</p>
               </div>
             </a>
           ))}
@@ -112,7 +112,7 @@ const popularArticles = articles.slice(2, 5);
       </div>
       <div class="lg:col-span-1">
         <div class="sticky top-20">
-          <h3 class="text-xs font-semibold text-ink-400 uppercase tracking-wider mb-4">赞助内容</h3>
+          <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">赞助内容</h3>
           <AdSlot slot="3333333333" format="rectangle" label="侧边栏广告" className="min-h-[250px]" />
         </div>
       </div>
@@ -121,18 +121,18 @@ const popularArticles = articles.slice(2, 5);
 
   <!-- Newsletter CTA -->
   <section class="container-page py-16">
-    <div class="rounded-3xl bg-ink-900 p-10 md:p-16 text-center">
-      <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">不要错过任何 GTA6 消息</h2>
-      <p class="text-ink-300 mb-8 max-w-xl mx-auto">订阅我们的更新，第一时间获取 GTA6 最新资讯、预告片解析和独家内容。</p>
+    <div class="rounded-2xl bg-navy-50 border border-navy-200 p-10 md:p-16 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-slate-100 mb-4">不要错过任何 GTA6 消息</h2>
+      <p class="text-slate-300 mb-8 max-w-xl mx-auto">订阅我们的更新，第一时间获取 GTA6 最新资讯、预告片解析和独家内容。</p>
       <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="return false;">
         <input
           type="email"
           placeholder="输入你的邮箱地址"
-          class="flex-1 px-4 py-3 rounded-full bg-white/10 border border-white/15 text-white placeholder-ink-400 focus:outline-none focus:border-accent"
+          class="flex-1 px-4 py-3 rounded bg-navy border border-navy-200 text-slate-100 placeholder-slate-400 focus:outline-none focus:border-accent"
         />
         <button type="submit" class="btn-primary whitespace-nowrap">立即订阅</button>
       </form>
-      <p class="text-xs text-ink-400 mt-4">我们不会发送垃圾邮件，随时可取消订阅。</p>
+      <p class="text-xs text-slate-400 mt-4">我们不会发送垃圾邮件，随时可取消订阅。</p>
     </div>
   </section>
 </BaseLayout>

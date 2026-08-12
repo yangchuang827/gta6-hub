@@ -8,7 +8,6 @@ const sortedArticles = [...articles].sort(
   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 );
 
-// Insert ad every 4 articles
 const displayItems = [];
 sortedArticles.forEach((article, index) => {
   displayItems.push({ type: 'article', data: article });
@@ -22,24 +21,22 @@ sortedArticles.forEach((article, index) => {
   title="全部资讯"
   description="浏览 GTA6 Hub 的全部资讯文章，包括最新新闻、预告片解析、角色介绍、玩法指南等内容。"
 >
-  <!-- Page Header -->
-  <section class="border-b border-ink-100">
+  <section class="border-b border-navy-200">
     <div class="container-page py-12">
-      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">全部资讯</h1>
-      <p class="text-ink-500">共 {articles.length} 篇文章 · 持续更新中</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-slate-100">全部资讯</h1>
+      <p class="text-slate-300">共 {articles.length} 篇文章 · 持续更新中</p>
     </div>
   </section>
 
-  <!-- Category Filter -->
   <div class="container-page py-6">
     <div class="flex flex-wrap gap-2">
-      <a href="/news" class="px-4 py-2 rounded-full text-sm font-medium bg-ink-900 text-white">
+      <a href="/news" class="px-4 py-2 rounded text-sm font-medium bg-accent text-navy">
         全部
       </a>
       {categories.map((cat) => (
         <a
           href={`/category/${cat.slug}`}
-          class="px-4 py-2 rounded-full text-sm font-medium text-ink-500 hover:text-ink-900 bg-white border border-ink-200 hover:border-ink-300 transition-colors"
+          class="px-4 py-2 rounded text-sm font-medium text-slate-300 hover:text-accent bg-navy-50 border border-navy-200 hover:border-accent/30 transition-colors"
         >
           {cat.name}
         </a>
@@ -47,7 +44,6 @@ sortedArticles.forEach((article, index) => {
     </div>
   </div>
 
-  <!-- Articles Grid -->
   <div class="container-page pb-16">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {displayItems.map((item) => (
