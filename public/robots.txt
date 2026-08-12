@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://gta6-hub.pages.dev/sitemap.xml
+Sitemap: https://gta6-hub.yangchuang827.workers.dev/sitemap.xml
 
 # Block sensitive paths
 Disallow: /api/
