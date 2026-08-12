@@ -17,7 +17,7 @@ export const siteConfig = {
   title: 'GTA6 Hub - GTA6 最新资讯、预告片解析与游戏指南',
   description:
     'GTA6 Hub 是您获取侠盗猎车手6 (GTA VI) 最新新闻、预告片解析、发售日期、角色介绍和游戏攻略的首选平台。追踪 Rockstar Games 的每一步动态。',
-  url: 'https://gta6-hub.yangchuang827.workers.dev',
+  url: 'https://gameinfos.org',
   keywords: [
     'GTA6',
     'GTA VI',

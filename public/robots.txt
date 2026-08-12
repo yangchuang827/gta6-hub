@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://gta6-hub.yangchuang827.workers.dev/sitemap.xml
+Sitemap: https://gameinfos.org/sitemap.xml
 
 # Block sensitive paths
 Disallow: /api/
