@@ -15,44 +15,45 @@ const dateStr = new Date(article.date).toLocaleDateString('zh-CN', {
   day: 'numeric',
 });
 
-// Generate a gradient-based visual for the article card
-const gradients: Record<string, string> = {
-  'release-date': 'from-orange-500 via-pink-500 to-purple-600',
-  'trailer-2': 'from-purple-600 via-pink-500 to-cyan-500',
-  'map-size': 'from-cyan-500 via-blue-500 to-purple-600',
-  'characters': 'from-pink-500 via-purple-500 to-indigo-600',
-  'gameplay': 'from-green-500 via-cyan-500 to-blue-600',
-  'pc-requirements': 'from-blue-500 via-purple-500 to-pink-600',
+// Subtle background tint per article
+const tints: Record<string, string> = {
+  'release-date': 'bg-orange-50',
+  'trailer-2': 'bg-purple-50',
+  'map-size': 'bg-cyan-50',
+  'characters': 'bg-rose-50',
+  'gameplay': 'bg-green-50',
+  'pc-requirements': 'bg-blue-50',
 };
-const gradient = gradients[article.image] || 'from-pink-500 via-purple-500 to-cyan-500';
+const tint = tints[article.image] || 'bg-ink-50';
 ---
 
 <article class={`card group ${featured ? 'md:col-span-2' : ''}`}>
   <a href={`/news/${article.slug}`} class="block">
     <!-- Visual Header -->
-    <div class={`relative h-48 ${featured ? 'md:h-64' : ''} bg-gradient-to-br ${gradient} overflow-hidden`}>
-      <div class="absolute inset-0 opacity-20" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M0 0h60v60H0z&quot; fill=&quot;none&quot;/%3E%3Cpath d=&quot;M30 0v60M0 30h60&quot; stroke=&quot;white&quot; stroke-width=&quot;0.5&quot;/%3E%3C/svg%3E');"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-vice-dark/80 to-transparent"></div>
+    <div class={`relative h-44 ${featured ? 'md:h-56' : ''} ${tint} overflow-hidden`}>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span class="text-6xl font-extrabold text-ink-900/5 tracking-tighter select-none">
+          GTA6
+        </span>
+      </div>
       {category && (
-        <span class={`absolute top-3 left-3 tag bg-vice-dark/80 text-${category.color === 'vice-pink' ? 'pink' : category.color === 'vice-purple' ? 'purple' : category.color === 'vice-cyan' ? 'cyan' : 'orange'}-400 border border-vice-border`}>
+        <span class="absolute top-3 left-3 tag bg-white/90 text-ink-700 border border-ink-100">
           {category.name}
         </span>
       )}
-      <div class="absolute bottom-3 left-3 right-3">
-        <h3 class={`font-display font-bold text-white leading-tight ${featured ? 'text-2xl' : 'text-lg'} group-hover:text-vice-pink transition-colors`}>
-          {article.title}
-        </h3>
-      </div>
     </div>
 
     <!-- Content -->
-    <div class="p-4">
-      <p class="text-sm text-gray-400 line-clamp-2 mb-3">
+    <div class="p-5">
+      <h3 class={`font-bold text-ink-900 leading-snug mb-2 group-hover:text-accent transition-colors ${featured ? 'text-xl' : 'text-base'}`}>
+        {article.title}
+      </h3>
+      <p class="text-sm text-ink-500 line-clamp-2 mb-4 leading-relaxed">
         {article.description}
       </p>
-      <div class="flex items-center gap-3 text-xs text-gray-500">
+      <div class="flex items-center gap-3 text-xs text-ink-400">
         <span>{dateStr}</span>
-        <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+        <span class="w-1 h-1 rounded-full bg-ink-200"></span>
         <span>{article.author}</span>
       </div>
     </div>

@@ -23,23 +23,23 @@ sortedArticles.forEach((article, index) => {
   description="浏览 GTA6 Hub 的全部资讯文章，包括最新新闻、预告片解析、角色介绍、玩法指南等内容。"
 >
   <!-- Page Header -->
-  <section class="border-b border-vice-border bg-vice-darker">
-    <div class="container-page py-10">
-      <h1 class="text-3xl md:text-4xl font-display font-extrabold mb-2">全部资讯</h1>
-      <p class="text-gray-400">共 {articles.length} 篇文章 · 持续更新中</p>
+  <section class="border-b border-ink-100">
+    <div class="container-page py-12">
+      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">全部资讯</h1>
+      <p class="text-ink-500">共 {articles.length} 篇文章 · 持续更新中</p>
     </div>
   </section>
 
   <!-- Category Filter -->
   <div class="container-page py-6">
     <div class="flex flex-wrap gap-2">
-      <a href="/news" class="px-4 py-2 rounded-lg text-sm font-medium bg-vice-pink/10 text-vice-pink border border-vice-pink/30">
+      <a href="/news" class="px-4 py-2 rounded-full text-sm font-medium bg-ink-900 text-white">
         全部
       </a>
       {categories.map((cat) => (
         <a
           href={`/category/${cat.slug}`}
-          class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white bg-vice-card border border-vice-border hover:border-vice-pink/30 transition-colors"
+          class="px-4 py-2 rounded-full text-sm font-medium text-ink-500 hover:text-ink-900 bg-white border border-ink-200 hover:border-ink-300 transition-colors"
         >
           {cat.name}
         </a>
@@ -48,7 +48,7 @@ sortedArticles.forEach((article, index) => {
   </div>
 
   <!-- Articles Grid -->
-  <div class="container-page pb-12">
+  <div class="container-page pb-16">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {displayItems.map((item) => (
         item.type === 'article' ? (

@@ -4,56 +4,61 @@ export default {
   theme: {
     extend: {
       colors: {
-        vice: {
-          pink: '#ff3e8a',
-          purple: '#9d4edd',
-          orange: '#ff6b35',
-          cyan: '#00d9ff',
-          dark: '#0a0a1a',
-          darker: '#060611',
-          card: '#13132a',
-          border: '#2a2a4a',
+        ink: {
+          900: '#1d1d1f',
+          700: '#424245',
+          500: '#6e6e73',
+          400: '#86868b',
+          300: '#a1a1a6',
+          200: '#d2d2d7',
+          100: '#e5e5e7',
+          50: '#f5f5f7',
+        },
+        accent: {
+          DEFAULT: '#FF6B35',
+          dark: '#e85a2b',
+          light: '#ff8a5b',
+          bg: '#fff5f0',
         },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Poppins', 'Inter', 'sans-serif'],
+        display: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
-      backgroundImage: {
-        'vice-gradient': 'linear-gradient(135deg, #ff3e8a 0%, #9d4edd 50%, #00d9ff 100%)',
-        'vice-sunset': 'linear-gradient(180deg, #ff6b35 0%, #ff3e8a 40%, #9d4edd 100%)',
-        'card-glow': 'linear-gradient(135deg, rgba(255,62,138,0.1) 0%, rgba(157,78,221,0.1) 100%)',
+      maxWidth: {
+        'content': '680px',
       },
       animation: {
-        'pulse-slow': 'pulse 3s ease-in-out infinite',
-        'float': 'float 6s ease-in-out infinite',
+        'fade-up': 'fadeUp 0.6s ease-out',
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
+        fadeUp: {
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
     },
   },
   safelist: [
-    // Dynamic category colors used in ArticleCard, index, category pages
-    'text-pink-400',
-    'text-purple-400',
-    'text-cyan-400',
-    'text-orange-400',
-    'bg-pink-500/10',
-    'bg-purple-500/10',
-    'bg-cyan-500/10',
-    'bg-orange-500/10',
-    // Article card gradients
-    'from-orange-500', 'via-pink-500', 'to-purple-600',
-    'from-purple-600', 'via-pink-500', 'to-cyan-500',
-    'from-cyan-500', 'via-blue-500', 'to-purple-600',
-    'from-pink-500', 'via-purple-500', 'to-indigo-600',
-    'from-green-500', 'via-cyan-500', 'to-blue-600',
-    'from-blue-500', 'via-purple-500', 'to-pink-600',
-    'from-pink-500', 'to-purple-600',
+    // Dynamic category accent colors
+    'text-orange-600',
+    'text-purple-600',
+    'text-cyan-600',
+    'text-rose-600',
+    'text-blue-600',
+    'text-green-600',
+    'bg-orange-50',
+    'bg-purple-50',
+    'bg-cyan-50',
+    'bg-rose-50',
+    'bg-blue-50',
+    'bg-green-50',
+    'border-orange-200',
+    'border-purple-200',
+    'border-cyan-200',
+    'border-rose-200',
+    'border-blue-200',
+    'border-green-200',
   ],
   plugins: [],
 };
