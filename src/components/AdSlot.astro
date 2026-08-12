@@ -1,0 +1,43 @@
+---
+import { siteConfig } from '@data/articles';
+
+interface Props {
+  slot?: string;
+  format?: 'auto' | 'rectangle' | 'horizontal' | 'vertical';
+  label?: string;
+  className?: string;
+}
+
+const {
+  slot = '0000000000',
+  format = 'auto',
+  label = '广告',
+  className = '',
+} = Astro.props;
+
+const isConfigured = siteConfig.adsenseClient !== 'ca-pub-XXXXXXXXXXXXXXXX' && slot !== '0000000000';
+---
+
+<div class={`ad-container ${className}`} aria-label="advertisement">
+  {isConfigured ? (
+    <ins
+      class="adsbygoogle"
+      style="display:block"
+      data-ad-client={siteConfig.adsenseClient}
+      data-ad-slot={slot}
+      data-ad-format={format}
+      data-full-width-responsive="true"
+    />
+  ) : (
+    <div class="flex flex-col items-center gap-1 text-gray-600 text-xs">
+      <span class="uppercase tracking-widest">{label}</span>
+      <span>配置 AdSense 后显示</span>
+    </div>
+  )}
+</div>
+
+{isConfigured && (
+  <script is:inline>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+)}

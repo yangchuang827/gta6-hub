@@ -1,0 +1,4 @@
+# Redirect old paths to new ones
+/old-news  /news  301
+/trailer   /category/trailers  301
+/guide     /category/guides  301

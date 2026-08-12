@@ -1,0 +1,168 @@
+---
+import { marked } from 'marked';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import AdSlot from '@components/AdSlot.astro';
+import ArticleCard from '@components/ArticleCard.astro';
+import { articles, categories, siteConfig } from '@data/articles';
+
+export function getStaticPaths() {
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const category = categories.find((c) => c.slug === article.category);
+const relatedArticles = articles
+  .filter((a) => a.slug !== article.slug && a.category === article.category)
+  .slice(0, 3);
+
+const dateStr = new Date(article.date).toLocaleDateString('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const updatedStr = article.updated
+  ? new Date(article.updated).toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null;
+
+// Render markdown to HTML
+const contentHtml = marked.parse(article.content, { async: false });
+
+// Gradient for article hero
+const gradients: Record<string, string> = {
+  'release-date': 'from-orange-500 via-pink-500 to-purple-600',
+  'trailer-2': 'from-purple-600 via-pink-500 to-cyan-500',
+  'map-size': 'from-cyan-500 via-blue-500 to-purple-600',
+  'characters': 'from-pink-500 via-purple-500 to-indigo-600',
+  'gameplay': 'from-green-500 via-cyan-500 to-blue-600',
+  'pc-requirements': 'from-blue-500 via-purple-500 to-pink-600',
+};
+const gradient = gradients[article.image] || 'from-pink-500 via-purple-500 to-cyan-500';
+---
+
+<BaseLayout
+  title={article.title}
+  description={article.description}
+  article={true}
+  publishedTime={new Date(article.date).toISOString()}
+  modifiedTime={article.updated ? new Date(article.updated).toISOString() : undefined}
+  author={article.author}
+>
+  <!-- Article Hero -->
+  <section class={`relative h-64 md:h-80 bg-gradient-to-br ${gradient} overflow-hidden`}>
+    <div class="absolute inset-0 opacity-20" style="background-image: url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22M0 0h60v60H0z%22 fill=%22none%22/%3E%3Cpath d=%22M30 0v60M0 30h60%22 stroke=%22white%22 stroke-width=%220.5%22/%3E%3C/svg%3E');"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-vice-dark via-vice-dark/50 to-transparent"></div>
+    <div class="relative container-page h-full flex flex-col justify-end pb-8">
+      {category && (
+        <a href={`/category/${category.slug}`} class="inline-block mb-3">
+          <span class="tag bg-vice-dark/80 text-white border border-vice-border">{category.name}</span>
+        </a>
+      )}
+      <h1 class="text-3xl md:text-4xl font-display font-extrabold text-white leading-tight max-w-3xl">
+        {article.title}
+      </h1>
+    </div>
+  </section>
+
+  <!-- Article Meta -->
+  <div class="container-page py-4 border-b border-vice-border">
+    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+      <span class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-full bg-vice-gradient flex items-center justify-center text-white text-xs font-bold">
+          {article.author.charAt(0)}
+        </span>
+        {article.author}
+      </span>
+      <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+      <span>{dateStr}</span>
+      {updatedStr && (
+        <>
+          <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+          <span>更新于 {updatedStr}</span>
+        </>
+      )}
+      <div class="ml-auto flex gap-2">
+        {article.tags.map((tag) => (
+          <span class="tag bg-vice-card text-gray-400">#{tag}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Article Body -->
+  <div class="container-page py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <article class="lg:col-span-2">
+        <div class="prose-content max-w-none" set:html={contentHtml} />
+
+        <!-- In-article Ad -->
+        <AdSlot slot="5555555555" format="auto" label="文章内广告" />
+
+        <!-- Share Buttons -->
+        <div class="mt-8 pt-6 border-t border-vice-border flex items-center gap-4">
+          <span class="text-sm text-gray-400">分享：</span>
+          <a
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(siteConfig.url + '/news/' + article.slug)}`}
+            target="_blank"
+            rel="noopener"
+            class="w-10 h-10 flex items-center justify-center rounded-lg bg-vice-card border border-vice-border text-gray-400 hover:text-vice-pink hover:border-vice-pink transition-colors"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(siteConfig.url + '/news/' + article.slug)}`}
+            target="_blank"
+            rel="noopener"
+            class="w-10 h-10 flex items-center justify-center rounded-lg bg-vice-card border border-vice-border text-gray-400 hover:text-vice-pink hover:border-vice-pink transition-colors"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Sidebar -->
+      <aside class="lg:col-span-1">
+        <div class="sticky top-20 space-y-6">
+          <!-- Sidebar Ad -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">赞助</h3>
+            <AdSlot slot="6666666666" format="rectangle" label="侧边栏广告" className="min-h-[250px]" />
+          </div>
+
+          <!-- Related Articles -->
+          {relatedArticles.length > 0 && (
+            <div>
+              <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">相关文章</h3>
+              <div class="space-y-3">
+                {relatedArticles.map((rel) => (
+                  <a href={`/news/${rel.slug}`} class="card p-3 flex gap-3 group">
+                    <div class={`w-16 h-16 flex-shrink-0 rounded-lg bg-gradient-to-br ${gradients[rel.image] || 'from-pink-500 to-purple-600'}`}></div>
+                    <div>
+                      <h4 class="text-sm font-medium text-white group-hover:text-vice-pink line-clamp-2 transition-colors">{rel.title}</h4>
+                      <span class="text-xs text-gray-500">{new Date(rel.date).toLocaleDateString('zh-CN')}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Bottom Sidebar Ad -->
+          <AdSlot slot="7777777777" format="vertical" label="侧边栏广告" />
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Bottom Ad -->
+  <div class="container-page pb-8">
+    <AdSlot slot="8888888888" label="底部广告" />
+  </div>
+</BaseLayout>

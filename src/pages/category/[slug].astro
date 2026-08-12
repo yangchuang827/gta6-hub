@@ -1,0 +1,56 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ArticleCard from '@components/ArticleCard.astro';
+import AdSlot from '@components/AdSlot.astro';
+import { articles, categories } from '@data/articles';
+
+export function getStaticPaths() {
+  return categories.map((cat) => ({
+    params: { slug: cat.slug },
+    props: { cat },
+  }));
+}
+
+const { cat } = Astro.props;
+const categoryArticles = articles
+  .filter((a) => a.category === cat.slug)
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+---
+
+<BaseLayout
+  title={`${cat.name}`}
+  description={`浏览 GTA6 ${cat.name} 分类下的全部文章。${categoryArticles.length} 篇相关资讯。`}
+>
+  <section class="border-b border-vice-border bg-vice-darker">
+    <div class="container-page py-10">
+      <div class="flex items-center gap-2 text-sm text-gray-400 mb-2">
+        <a href="/" class="hover:text-vice-pink">首页</a>
+        <span>/</span>
+        <a href="/news" class="hover:text-vice-pink">资讯</a>
+        <span>/</span>
+        <span class="text-gray-300">{cat.name}</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-display font-extrabold mb-2">{cat.name}</h1>
+      <p class="text-gray-400">共 {categoryArticles.length} 篇文章</p>
+    </div>
+  </section>
+
+  <div class="container-page py-8">
+    {categoryArticles.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {categoryArticles.map((article) => (
+          <ArticleCard article={article} />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-20">
+        <p class="text-gray-400 mb-4">该分类暂无文章</p>
+        <a href="/news" class="text-vice-cyan hover:text-vice-pink">浏览全部资讯 &rarr;</a>
+      </div>
+    )}
+  </div>
+
+  <div class="container-page pb-8">
+    <AdSlot slot="9999999999" label="分类页广告" />
+  </div>
+</BaseLayout>

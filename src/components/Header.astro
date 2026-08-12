@@ -1,0 +1,80 @@
+---
+import { categories, siteConfig } from '@data/articles';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 border-b border-vice-border bg-vice-darker/95 backdrop-blur-md">
+  <div class="container-page">
+    <div class="flex h-16 items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl font-display font-extrabold gradient-text">GTA6</span>
+        <span class="text-sm font-medium text-gray-400 hidden sm:inline">Hub</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-1">
+        <a
+          href="/"
+          class={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${currentPath === '/' ? 'text-vice-pink bg-vice-pink/10' : 'text-gray-400 hover:text-white'}`}
+        >
+          首页
+        </a>
+        {categories.slice(0, 5).map((cat) => (
+          <a
+            href={`/category/${cat.slug}`}
+            class={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${currentPath === `/category/${cat.slug}` ? 'text-vice-pink bg-vice-pink/10' : 'text-gray-400 hover:text-white'}`}
+          >
+            {cat.name}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-3">
+        <a
+          href="/news"
+          class="hidden sm:inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold text-white bg-vice-gradient"
+        >
+          全部资讯
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button
+          id="menu-toggle"
+          class="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-vice-card"
+          aria-label="菜单"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-vice-border bg-vice-darker">
+    <nav class="container-page py-4 flex flex-col gap-1">
+      <a href="/" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-vice-card">首页</a>
+      {categories.map((cat) => (
+        <a
+          href={`/category/${cat.slug}`}
+          class="px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-vice-card"
+        >
+          {cat.name}
+        </a>
+      ))}
+      <a href="/news" class="px-3 py-2 rounded-lg text-sm font-semibold text-white bg-vice-gradient mt-2 text-center">全部资讯</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+  });
+</script>

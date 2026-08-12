@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://gta6-hub.pages.dev/sitemap.xml
+
+# Block sensitive paths
+Disallow: /api/
+Disallow: /admin/

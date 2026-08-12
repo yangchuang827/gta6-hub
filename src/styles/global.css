@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-vice-dark text-gray-200 antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display font-bold text-white;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .gradient-text {
+    @apply bg-vice-gradient bg-clip-text text-transparent;
+  }
+
+  .card {
+    @apply bg-vice-card border border-vice-border rounded-xl overflow-hidden transition-all duration-300;
+  }
+
+  .card:hover {
+    @apply border-vice-pink/50 shadow-lg shadow-vice-pink/10;
+    transform: translateY(-2px);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-white bg-vice-gradient transition-transform duration-200;
+  }
+
+  .btn-primary:hover {
+    transform: scale(1.03);
+  }
+
+  .tag {
+    @apply inline-block px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  .ad-container {
+    @apply my-8 flex items-center justify-center min-h-[90px] rounded-lg border border-vice-border bg-vice-card/50;
+  }
+
+  .prose-content p {
+    @apply mb-4 text-gray-300 leading-relaxed;
+  }
+
+  .prose-content h2 {
+    @apply text-2xl mt-8 mb-4;
+  }
+
+  .prose-content h3 {
+    @apply text-xl mt-6 mb-3;
+  }
+
+  .prose-content ul {
+    @apply mb-4 ml-6 list-disc space-y-2 text-gray-300;
+  }
+
+  .prose-content a {
+    @apply text-vice-cyan hover:text-vice-pink;
+  }
+
+  .prose-content blockquote {
+    @apply border-l-4 border-vice-pink pl-4 italic text-gray-400 my-4;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a4a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff3e8a;
+}

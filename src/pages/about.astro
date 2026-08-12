@@ -1,0 +1,47 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { siteConfig } from '@data/articles';
+---
+
+<BaseLayout
+  title="关于我们"
+  description="了解 GTA6 Hub - 致力于为玩家提供最全面、最及时的 GTA6 资讯和游戏指南。"
+>
+  <section class="container-page py-12">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-display font-extrabold mb-6">关于 GTA6 Hub</h1>
+
+      <div class="prose-content">
+        <p>
+          {siteConfig.name} 是一个专注于侠盗猎车手6 (GTA VI) 的粉丝资讯网站。我们的目标是
+          为全球中文玩家提供最全面、最及时、最准确的 GTA6 相关信息。
+        </p>
+
+        <h2>我们的内容</h2>
+        <p>我们覆盖 GTA6 的方方面面，包括但不限于：</p>
+        <ul>
+          <li><strong>最新资讯</strong>：发售日期、官方公告、行业新闻</li>
+          <li><strong>预告片解析</strong>：逐帧分析每一支预告片中的隐藏细节</li>
+          <li><strong>角色介绍</strong>：深入了解 Lucia、Jason 及其他角色</li>
+          <li><strong>玩法指南</strong>：游戏机制、系统、攻略</li>
+          <li><strong>硬件配置</strong>：PC 版配置要求预测和优化建议</li>
+        </ul>
+
+        <h2>免责声明</h2>
+        <blockquote>
+          {siteConfig.name} 是一个非官方的粉丝网站，与 Rockstar Games、Take-Two Interactive
+          或其任何子公司没有任何关联。GTA 和所有相关商标均为其各自所有者的财产。
+        </blockquote>
+
+        <h2>联系我们</h2>
+        <p>
+          如果您有任何问题、建议或合作意向，欢迎通过以下方式联系我们：
+        </p>
+        <ul>
+          <li>Email: contact@gta6-hub.pages.dev</li>
+          <li>YouTube: <a href={siteConfig.social.youtube} target="_blank" rel="noopener">{siteConfig.social.youtube}</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
