@@ -37,11 +37,16 @@
   }
 
   .card:hover {
-    @apply border-accent/40;
+    @apply border-vice-pink/40;
+    box-shadow: 0 0 30px rgba(255, 0, 110, 0.08);
   }
 
   .btn-primary {
     @apply inline-flex items-center justify-center px-6 py-3 rounded font-semibold text-navy bg-accent transition-all duration-200 hover:bg-accent-dark;
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 24px rgba(100, 255, 218, 0.25);
   }
 
   .btn-secondary {
@@ -81,11 +86,38 @@
   }
 
   .prose-content blockquote {
-    @apply border-l-2 border-accent pl-5 italic text-slate-400 my-6;
+    @apply border-l-2 border-vice-pink pl-5 italic text-slate-400 my-6;
   }
 
   .prose-content code {
     @apply px-1.5 py-0.5 rounded bg-navy-100 text-accent text-[15px] font-mono;
+  }
+
+  /* Vice City neon effects */
+  .neon-text {
+    text-shadow: 0 0 20px rgba(255, 0, 110, 0.35), 0 0 40px rgba(168, 85, 247, 0.2);
+  }
+
+  .neon-border {
+    box-shadow: 0 0 20px rgba(255, 0, 110, 0.15), inset 0 0 20px rgba(255, 0, 110, 0.05);
+  }
+
+  .hero-gradient {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 25, 47, 0.95) 0%,
+      rgba(10, 25, 47, 0.85) 35%,
+      rgba(10, 25, 47, 0.6) 60%,
+      rgba(10, 25, 47, 0.4) 100%
+    );
+  }
+
+  .hero-vignette {
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(10, 25, 47, 0.4) 70%, rgba(10, 25, 47, 0.8) 100%);
+  }
+
+  .cta-gradient {
+    background: linear-gradient(135deg, rgba(255, 0, 110, 0.08) 0%, rgba(168, 85, 247, 0.08) 50%, rgba(100, 255, 218, 0.05) 100%);
   }
 }
 
@@ -103,7 +135,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2D4373;
+  background: #FF006E;
 }
 
 ::selection {

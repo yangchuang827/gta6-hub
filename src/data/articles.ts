@@ -41,12 +41,12 @@ export const siteConfig = {
 };
 
 export const categories = [
-  { slug: 'news', name: '最新资讯', color: 'cyan' },
-  { slug: 'trailers', name: '预告片解析', color: 'purple' },
-  { slug: 'gameplay', name: '游戏玩法', color: 'emerald' },
-  { slug: 'characters', name: '角色介绍', color: 'rose' },
-  { slug: 'guides', name: '攻略指南', color: 'blue' },
-  { slug: 'rumors', name: '传闻与泄露', color: 'amber' },
+  { slug: 'news', name: '最新资讯', color: 'vice-pink' },
+  { slug: 'trailers', name: '预告片解析', color: 'vice-purple' },
+  { slug: 'gameplay', name: '游戏玩法', color: 'vice-orange' },
+  { slug: 'characters', name: '角色介绍', color: 'vice-yellow' },
+  { slug: 'guides', name: '攻略指南', color: 'cyan' },
+  { slug: 'rumors', name: '传闻与泄露', color: 'vice-magenta' },
 ];
 
 export const articles: Article[] = [

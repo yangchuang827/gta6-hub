@@ -21,16 +21,17 @@ const categoryArticles = articles
   title={`${cat.name}`}
   description={`浏览 GTA6 ${cat.name} 分类下的全部文章。${categoryArticles.length} 篇相关资讯。`}
 >
-  <section class="border-b border-navy-200">
+  <section class="border-b border-navy-200 relative">
+    <div class={`absolute top-0 left-0 right-0 h-1 bg-${cat.color}`}></div>
     <div class="container-page py-12">
       <div class="flex items-center gap-2 text-sm text-slate-400 mb-3">
         <a href="/" class="hover:text-accent">首页</a>
         <span>/</span>
         <a href="/news" class="hover:text-accent">资讯</a>
         <span>/</span>
-        <span class="text-slate-300">{cat.name}</span>
+        <span class={`text-${cat.color}`}>{cat.name}</span>
       </div>
-      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-slate-100">{cat.name}</h1>
+      <h1 class={`text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-${cat.color}`}>{cat.name}</h1>
       <p class="text-slate-300">共 {categoryArticles.length} 篇文章</p>
     </div>
   </section>

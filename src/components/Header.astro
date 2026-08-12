@@ -4,12 +4,14 @@ import { categories, siteConfig } from '@data/articles';
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 z-50 border-b border-navy-200 bg-navy/90 backdrop-blur-xl">
+<header class="sticky top-0 z-50 border-b border-navy-200/80 bg-navy/85 backdrop-blur-xl">
   <div class="container-page">
     <div class="flex h-16 items-center justify-between">
-      <a href="/" class="flex items-center gap-1.5">
-        <span class="text-xl font-extrabold tracking-tight text-slate-100">GTA6</span>
-        <span class="text-xl font-extrabold tracking-tight text-accent">Hub</span>
+      <a href="/" class="flex items-center gap-1.5 group">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-vice-pink via-vice-purple to-vice-orange bg-clip-text text-transparent">
+          GTA6
+        </span>
+        <span class="text-xl font-extrabold tracking-tight text-accent group-hover:text-white transition-colors">Hub</span>
       </a>
 
       <nav class="hidden lg:flex items-center gap-1">
@@ -22,7 +24,7 @@ const currentPath = Astro.url.pathname;
         {categories.slice(0, 5).map((cat) => (
           <a
             href={`/category/${cat.slug}`}
-            class={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentPath === `/category/${cat.slug}` ? 'text-accent' : 'text-slate-300 hover:text-slate-100'}`}
+            class={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentPath === `/category/${cat.slug}` ? `text-${cat.color}` : 'text-slate-300 hover:text-slate-100'}`}
           >
             {cat.name}
           </a>
@@ -32,14 +34,14 @@ const currentPath = Astro.url.pathname;
       <div class="flex items-center gap-3">
         <a
           href="/news"
-          class="hidden sm:inline-flex items-center px-4 py-2 rounded text-sm font-semibold text-navy bg-accent hover:bg-accent-dark transition-colors"
+          class="hidden sm:inline-flex items-center px-4 py-2 rounded text-sm font-semibold text-navy bg-accent hover:bg-accent-dark transition-all duration-200 hover:shadow-[0_0_20px_rgba(100,255,218,0.25)]"
         >
           全部资讯
         </a>
 
         <button
           id="menu-toggle"
-          class="lg:hidden p-2 rounded text-slate-300 hover:text-accent hover:bg-navy-50"
+          class="lg:hidden p-2 rounded text-slate-300 hover:text-vice-pink hover:bg-navy-50"
           aria-label="菜单"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,11 +54,11 @@ const currentPath = Astro.url.pathname;
 
   <div id="mobile-menu" class="hidden lg:hidden border-t border-navy-200 bg-navy">
     <nav class="container-page py-4 flex flex-col gap-1">
-      <a href="/" class="px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-accent hover:bg-navy-50">首页</a>
+      <a href="/" class="px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-vice-pink hover:bg-navy-50">首页</a>
       {categories.map((cat) => (
         <a
           href={`/category/${cat.slug}`}
-          class="px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-accent hover:bg-navy-50"
+          class={`px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-${cat.color} hover:bg-navy-50`}
         >
           {cat.name}
         </a>

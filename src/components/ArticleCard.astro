@@ -16,12 +16,12 @@ const dateStr = new Date(article.date).toLocaleDateString('zh-CN', {
 });
 
 const tints: Record<string, string> = {
-  'release-date': 'bg-cyan-500/10',
-  'trailer-2': 'bg-purple-500/10',
-  'map-size': 'bg-emerald-500/10',
-  'characters': 'bg-rose-500/10',
-  'gameplay': 'bg-blue-500/10',
-  'pc-requirements': 'bg-amber-500/10',
+  'release-date': 'bg-vice-pink/10',
+  'trailer-2': 'bg-vice-purple/10',
+  'map-size': 'bg-vice-orange/10',
+  'characters': 'bg-vice-yellow/10',
+  'gameplay': 'bg-cyan-500/10',
+  'pc-requirements': 'bg-vice-magenta/10',
 };
 const tint = tints[article.image] || 'bg-navy-100';
 ---
@@ -35,7 +35,7 @@ const tint = tints[article.image] || 'bg-navy-100';
         </span>
       </div>
       {category && (
-        <span class="absolute top-3 left-3 tag bg-navy/80 text-accent border border-accent/20">
+        <span class={`absolute top-3 left-3 tag bg-navy/80 text-${category.color} border border-${category.color}/30`}>
           {category.name}
         </span>
       )}
