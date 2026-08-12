@@ -28,3 +28,10 @@ pnpm-debug.log*
 
 # Astro
 .astro/
+
+# WorkBuddy
+.workbuddy/
+
+# temp files
+install_output.txt
+install_log.txt
