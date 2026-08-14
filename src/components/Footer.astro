@@ -1,29 +1,40 @@
 ---
-import { categories, siteConfig } from '@data/articles';
+import { categories, siteConfig, getCategoryName } from '@data/articles';
+import type { Lang } from '../i18n/ui';
+import { t } from '../i18n/ui';
 
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'zh' } = Astro.props;
 const year = new Date().getFullYear();
+const prefix = lang === 'en' ? '/en' : '';
+const desc = lang === 'en' ? siteConfig.descriptionEn : siteConfig.description;
 ---
 
 <footer class="border-t border-navy-200 bg-navy-50/30 mt-20">
   <div class="container-page py-12">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
       <div class="col-span-2">
-        <a href="/" class="flex items-center gap-1.5 mb-4">
+        <a href={prefix || '/'} class="flex items-center gap-1.5 mb-4">
           <span class="text-xl font-extrabold tracking-tight text-slate-100">GTA6</span>
           <span class="text-xl font-extrabold tracking-tight text-accent">Hub</span>
         </a>
         <p class="text-sm text-slate-300 max-w-md leading-relaxed">
-          {siteConfig.description}
+          {desc}
         </p>
       </div>
 
       <div>
-        <h3 class="text-xs font-semibold text-slate-100 uppercase tracking-wider mb-4">分类</h3>
+        <h3 class="text-xs font-semibold text-slate-100 uppercase tracking-wider mb-4">
+          {lang === 'en' ? 'Categories' : '分类'}
+        </h3>
         <ul class="space-y-2.5">
           {categories.map((cat) => (
             <li>
-              <a href={`/category/${cat.slug}`} class="text-sm text-slate-300 hover:text-accent">
-                {cat.name}
+              <a href={`${prefix}/category/${cat.slug}`} class="text-sm text-slate-300 hover:text-accent">
+                {getCategoryName(cat.slug, lang)}
               </a>
             </li>
           ))}
@@ -31,21 +42,23 @@ const year = new Date().getFullYear();
       </div>
 
       <div>
-        <h3 class="text-xs font-semibold text-slate-100 uppercase tracking-wider mb-4">快速链接</h3>
+        <h3 class="text-xs font-semibold text-slate-100 uppercase tracking-wider mb-4">
+          {lang === 'en' ? 'Quick Links' : '快速链接'}
+        </h3>
         <ul class="space-y-2.5">
-          <li><a href="/about" class="text-sm text-slate-300 hover:text-accent">关于我们</a></li>
-          <li><a href="/news" class="text-sm text-slate-300 hover:text-accent">全部资讯</a></li>
-          <li><a href="/privacy" class="text-sm text-slate-300 hover:text-accent">隐私政策</a></li>
+          <li><a href={`${prefix}/about`} class="text-sm text-slate-300 hover:text-accent">{t(lang, 'footer.about')}</a></li>
+          <li><a href={`${prefix}/news`} class="text-sm text-slate-300 hover:text-accent">{t(lang, 'nav.news')}</a></li>
+          <li><a href={`${prefix}/privacy`} class="text-sm text-slate-300 hover:text-accent">{t(lang, 'footer.privacy')}</a></li>
         </ul>
       </div>
     </div>
 
     <div class="mt-10 pt-6 border-t border-navy-200 flex flex-col sm:flex-row justify-between items-center gap-4">
       <p class="text-xs text-slate-400">
-        &copy; {year} {siteConfig.name}. 保留所有权利。
+        &copy; {year} {siteConfig.name}. {t(lang, 'footer.rights')}
       </p>
       <p class="text-xs text-slate-400">
-        本站为粉丝资讯网站，与 Rockstar Games 或 Take-Two Interactive 无官方关联。
+        {t(lang, 'footer.disclaimer')}
       </p>
     </div>
   </div>

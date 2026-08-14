@@ -35,3 +35,10 @@ pnpm-debug.log*
 # temp files
 install_output.txt
 install_log.txt
+
+# RSS cache (temporary, but keep processed-slugs.json)
+scripts/cache/feeds.json
+
+.dev.vars*
+!.dev.vars.example
+!.env.example

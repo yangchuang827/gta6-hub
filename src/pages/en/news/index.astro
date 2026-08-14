@@ -3,9 +3,9 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import ArticleCard from '@components/ArticleCard.astro';
 import AdSlot from '@components/AdSlot.astro';
 import { getArticles, categories, getCategoryName } from '@data/articles';
-import { t } from '../../i18n/ui';
+import { t } from '../../../i18n/ui';
 
-const lang = 'zh' as const;
+const lang = 'en' as const;
 const articles = getArticles(lang);
 const sortedArticles = [...articles].sort(
   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -23,7 +23,8 @@ sortedArticles.forEach((article, index) => {
 <BaseLayout
   lang={lang}
   title={t(lang, 'news.title')}
-  description="浏览 GTA6 Hub 的全部资讯文章，包括最新新闻、预告片解析、角色介绍、玩法指南等内容。"
+  description="Browse all GTA6 Hub articles including latest news, trailer breakdowns, character profiles, and gameplay guides."
+  canonicalPath="/news"
 >
   <section class="page-banner">
     <div class="page-banner-bg bg-news-vice"></div>
@@ -39,12 +40,12 @@ sortedArticles.forEach((article, index) => {
 
   <div class="container-page py-6">
     <div class="flex flex-wrap gap-2">
-      <a href="/news" class="px-4 py-2 rounded text-sm font-medium bg-accent text-navy hover:shadow-[0_0_16px_rgba(100,255,218,0.25)] transition-all">
+      <a href="/en/news" class="px-4 py-2 rounded text-sm font-medium bg-accent text-navy hover:shadow-[0_0_16px_rgba(100,255,218,0.25)] transition-all">
         {t(lang, 'news.all')}
       </a>
       {categories.map((cat) => (
         <a
-          href={`/category/${cat.slug}`}
+          href={`/en/category/${cat.slug}`}
           class={`px-4 py-2 rounded text-sm font-medium text-slate-300 bg-navy-50 border border-navy-200 hover:border-${cat.color}/50 hover:text-${cat.color} transition-colors`}
         >
           {getCategoryName(cat.slug, lang)}

@@ -116,6 +116,61 @@
     background: radial-gradient(ellipse at center, transparent 0%, rgba(10, 25, 47, 0.4) 70%, rgba(10, 25, 47, 0.8) 100%);
   }
 
+  .page-banner {
+    @apply relative overflow-hidden border-b border-navy-200;
+  }
+
+  .page-banner-bg {
+    @apply absolute inset-0 bg-cover bg-center bg-no-repeat;
+  }
+
+  .page-banner-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 25, 47, 0.92) 0%,
+      rgba(10, 25, 47, 0.82) 50%,
+      rgba(10, 25, 47, 0.72) 100%
+    );
+  }
+
+  .page-banner-overlay-side {
+    background: linear-gradient(
+      90deg,
+      rgba(10, 25, 47, 0.9) 0%,
+      rgba(10, 25, 47, 0.7) 50%,
+      rgba(10, 25, 47, 0.5) 100%
+    );
+  }
+
+  .fullpage-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background-image: url(/images/bg-page.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .fullpage-bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 25, 47, 0.88) 0%,
+      rgba(10, 25, 47, 0.82) 40%,
+      rgba(10, 25, 47, 0.90) 80%,
+      rgba(10, 25, 47, 0.95) 100%
+    );
+  }
+
   .cta-gradient {
     background: linear-gradient(135deg, rgba(255, 0, 110, 0.08) 0%, rgba(168, 85, 247, 0.08) 50%, rgba(100, 255, 218, 0.05) 100%);
   }

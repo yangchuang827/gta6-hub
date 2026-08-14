@@ -2,14 +2,20 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="页面未找到" description="您访问的页面不存在。" noindex={true}>
-  <section class="container-page py-24 text-center">
-    <div class="max-w-md mx-auto">
-      <h1 class="text-7xl font-extrabold tracking-tight text-accent mb-4 font-mono">404</h1>
-      <p class="text-lg text-slate-300 mb-8">抱歉，您访问的页面不存在或已被移除。</p>
-      <div class="flex flex-wrap items-center justify-center gap-3">
-        <a href="/" class="btn-primary">返回首页</a>
-        <a href="/news" class="btn-secondary">浏览资讯</a>
+<BaseLayout lang="zh" title="页面未找到" description="您访问的页面不存在。" noindex={true}>
+  <section class="page-banner min-h-[60vh] flex items-center">
+    <div class="page-banner-bg bg-404-vice"></div>
+    <div class="absolute inset-0 page-banner-overlay"></div>
+    <div class="absolute inset-0 hero-vignette"></div>
+    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-vice-magenta via-vice-purple to-vice-pink"></div>
+    <div class="container-page relative z-10 py-24 text-center w-full">
+      <div class="max-w-md mx-auto">
+        <h1 class="text-8xl md:text-9xl font-extrabold tracking-tight mb-4 font-mono bg-gradient-to-r from-vice-magenta via-vice-pink to-vice-orange bg-clip-text text-transparent neon-text">404</h1>
+        <p class="text-lg text-slate-200 mb-8">抱歉，您访问的页面不存在或已被移除。</p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a href="/" class="btn-primary">返回首页</a>
+          <a href="/news" class="btn-secondary">浏览资讯</a>
+        </div>
       </div>
     </div>
   </section>

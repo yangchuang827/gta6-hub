@@ -4,17 +4,16 @@ import ArticleCard from '@components/ArticleCard.astro';
 import AdSlot from '@components/AdSlot.astro';
 import StatsHub from '@components/StatsHub.astro';
 import { getArticles, getFeaturedArticles, categories, siteConfig } from '@data/articles';
-import { t } from '../i18n/ui';
+import { t } from '../../i18n/ui';
 
-const lang = 'zh' as const;
+const lang = 'en' as const;
 const allArticles = getArticles(lang);
 const featuredArticles = getFeaturedArticles(lang);
 const latestArticles = allArticles.slice(0, 6);
 const popularArticles = allArticles.slice(2, 5);
 ---
 
-<BaseLayout lang={lang} fullPageBg={false}>
-  <!-- Hero Section with Vice City Background -->
+<BaseLayout lang={lang} canonicalPath="/" fullPageBg={false}>
   <section class="relative min-h-[70vh] md:min-h-[75vh] flex items-center overflow-hidden border-b border-navy-200">
     <div class="absolute inset-0 bg-hero-vice bg-cover bg-center bg-no-repeat"></div>
     <div class="absolute inset-0 hero-gradient"></div>
@@ -33,13 +32,13 @@ const popularArticles = allArticles.slice(2, 5);
           <span class="bg-gradient-to-r from-vice-pink via-vice-purple to-vice-orange bg-clip-text text-transparent">{t(lang, 'hero.titleHighlight')}</span>
         </h1>
         <p class="text-lg md:text-xl text-slate-200 max-w-2xl mb-10 leading-relaxed animate-fade-up">
-          {siteConfig.description}
+          {siteConfig.descriptionEn}
         </p>
         <div class="flex flex-wrap items-center gap-3 animate-fade-up">
-          <a href="/news" class="btn-primary">
+          <a href="/en/news" class="btn-primary">
             {t(lang, 'hero.cta1')}
           </a>
-          <a href="/news/gta6-trailer-2-breakdown" class="btn-secondary">
+          <a href="/en/news/gta6-trailer-2-breakdown" class="btn-secondary">
             {t(lang, 'hero.cta2')}
           </a>
         </div>
@@ -56,7 +55,7 @@ const popularArticles = allArticles.slice(2, 5);
   <section class="container-page py-16">
     <div class="flex items-center justify-between mb-8">
       <h2 class="text-2xl font-bold tracking-tight text-slate-100">{t(lang, 'section.featured')}</h2>
-      <a href="/news" class="text-sm text-accent hover:text-accent-dark font-medium">{t(lang, 'section.viewAll')} &rarr;</a>
+      <a href="/en/news" class="text-sm text-accent hover:text-accent-dark font-medium">{t(lang, 'section.viewAll')} &rarr;</a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       {featuredArticles.map((article) => (
@@ -72,7 +71,7 @@ const popularArticles = allArticles.slice(2, 5);
   <section class="container-page py-16">
     <div class="flex items-center justify-between mb-8">
       <h2 class="text-2xl font-bold tracking-tight text-slate-100">{t(lang, 'section.latest')}</h2>
-      <a href="/news" class="text-sm text-accent hover:text-accent-dark font-medium">{t(lang, 'section.more')} &rarr;</a>
+      <a href="/en/news" class="text-sm text-accent hover:text-accent-dark font-medium">{t(lang, 'section.more')} &rarr;</a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {latestArticles.map((article) => (
@@ -87,14 +86,14 @@ const popularArticles = allArticles.slice(2, 5);
       <h2 class="text-2xl font-bold tracking-tight text-slate-100 mb-8">{t(lang, 'section.categories')}</h2>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {categories.map((cat) => (
-          <a href={`/category/${cat.slug}`} class="card p-5 text-center group relative">
+          <a href={`/en/category/${cat.slug}`} class="card p-5 text-center group relative">
             <div class={`absolute top-0 left-0 right-0 h-0.5 bg-${cat.color}`}></div>
             <div class={`w-10 h-10 mx-auto mb-3 rounded-lg bg-${cat.color}/10 border border-${cat.color}/30 flex items-center justify-center`}>
               <span class={`text-${cat.color} text-sm font-bold`}>
-                {cat.name.charAt(0)}
+                {cat.nameEn.charAt(0)}
               </span>
             </div>
-            <span class="text-sm font-medium text-slate-300 group-hover:text-white">{cat.name}</span>
+            <span class="text-sm font-medium text-slate-300 group-hover:text-white">{cat.nameEn}</span>
           </a>
         ))}
       </div>
@@ -107,7 +106,7 @@ const popularArticles = allArticles.slice(2, 5);
         <h2 class="text-2xl font-bold tracking-tight text-slate-100 mb-8">{t(lang, 'section.popular')}</h2>
         <div class="space-y-5">
           {popularArticles.map((article, index) => (
-            <a href={`/news/${article.slug}`} class="card p-5 flex items-start gap-5 group relative">
+            <a href={`/en/news/${article.slug}`} class="card p-5 flex items-start gap-5 group relative">
               <span class="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-vice-pink to-vice-purple rounded-l opacity-0 group-hover:opacity-100 transition-opacity"></span>
               <span class="text-3xl font-extrabold text-slate-400/30 flex-shrink-0 w-10 font-mono group-hover:text-vice-pink transition-colors">
                 {String(index + 1).padStart(2, '0')}

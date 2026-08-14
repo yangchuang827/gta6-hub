@@ -1,13 +1,23 @@
 ---
-import { categories, siteConfig } from '@data/articles';
+import { categories } from '@data/articles';
+import { getCategoryName } from '@data/articles';
+import type { Lang } from '../i18n/ui';
+import { t } from '../i18n/ui';
+import LanguageSwitcher from './LanguageSwitcher.astro';
 
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'zh' } = Astro.props;
 const currentPath = Astro.url.pathname;
+const prefix = lang === 'en' ? '/en' : '';
 ---
 
 <header class="sticky top-0 z-50 border-b border-navy-200/80 bg-navy/85 backdrop-blur-xl">
   <div class="container-page">
     <div class="flex h-16 items-center justify-between">
-      <a href="/" class="flex items-center gap-1.5 group">
+      <a href={prefix || '/'} class="flex items-center gap-1.5 group">
         <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-vice-pink via-vice-purple to-vice-orange bg-clip-text text-transparent">
           GTA6
         </span>
@@ -16,33 +26,35 @@ const currentPath = Astro.url.pathname;
 
       <nav class="hidden lg:flex items-center gap-1">
         <a
-          href="/"
-          class={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentPath === '/' ? 'text-accent' : 'text-slate-300 hover:text-slate-100'}`}
+          href={prefix || '/'}
+          class={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentPath === prefix + '/' || currentPath === '/' ? 'text-accent' : 'text-slate-300 hover:text-slate-100'}`}
         >
-          首页
+          {t(lang, 'nav.home')}
         </a>
         {categories.slice(0, 5).map((cat) => (
           <a
-            href={`/category/${cat.slug}`}
-            class={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentPath === `/category/${cat.slug}` ? `text-${cat.color}` : 'text-slate-300 hover:text-slate-100'}`}
+            href={`${prefix}/category/${cat.slug}`}
+            class={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentPath === `${prefix}/category/${cat.slug}` ? `text-${cat.color}` : 'text-slate-300 hover:text-slate-100'}`}
           >
-            {cat.name}
+            {getCategoryName(cat.slug, lang)}
           </a>
         ))}
       </nav>
 
       <div class="flex items-center gap-3">
+        <LanguageSwitcher lang={lang} currentPath={currentPath} />
+
         <a
-          href="/news"
+          href={`${prefix}/news`}
           class="hidden sm:inline-flex items-center px-4 py-2 rounded text-sm font-semibold text-navy bg-accent hover:bg-accent-dark transition-all duration-200 hover:shadow-[0_0_20px_rgba(100,255,218,0.25)]"
         >
-          全部资讯
+          {t(lang, 'nav.news')}
         </a>
 
         <button
           id="menu-toggle"
           class="lg:hidden p-2 rounded text-slate-300 hover:text-vice-pink hover:bg-navy-50"
-          aria-label="菜单"
+          aria-label="Menu"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
@@ -54,16 +66,16 @@ const currentPath = Astro.url.pathname;
 
   <div id="mobile-menu" class="hidden lg:hidden border-t border-navy-200 bg-navy">
     <nav class="container-page py-4 flex flex-col gap-1">
-      <a href="/" class="px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-vice-pink hover:bg-navy-50">首页</a>
+      <a href={prefix || '/'} class="px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-vice-pink hover:bg-navy-50">{t(lang, 'nav.home')}</a>
       {categories.map((cat) => (
         <a
-          href={`/category/${cat.slug}`}
+          href={`${prefix}/category/${cat.slug}`}
           class={`px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-${cat.color} hover:bg-navy-50`}
         >
-          {cat.name}
+          {getCategoryName(cat.slug, lang)}
         </a>
       ))}
-      <a href="/news" class="px-3 py-2 rounded text-sm font-semibold text-navy bg-accent mt-2 text-center">全部资讯</a>
+      <a href={`${prefix}/news`} class="px-3 py-2 rounded text-sm font-semibold text-navy bg-accent mt-2 text-center">{t(lang, 'nav.news')}</a>
     </nav>
   </div>
 </header>

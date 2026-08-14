@@ -1,19 +1,23 @@
 ---
 import type { Article } from '@data/articles';
-import { categories } from '@data/articles';
+import { categories, getCategoryName } from '@data/articles';
+import type { Lang } from '../i18n/ui';
 
 interface Props {
   article: Article;
   featured?: boolean;
+  lang?: Lang;
 }
 
-const { article, featured = false } = Astro.props;
+const { article, featured = false, lang = 'zh' } = Astro.props;
 const category = categories.find((c) => c.slug === article.category);
-const dateStr = new Date(article.date).toLocaleDateString('zh-CN', {
+const locale = lang === 'en' ? 'en-US' : 'zh-CN';
+const dateStr = new Date(article.date).toLocaleDateString(locale, {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
+const prefix = lang === 'en' ? '/en' : '';
 
 const tints: Record<string, string> = {
   'release-date': 'bg-vice-pink/10',
@@ -27,7 +31,7 @@ const tint = tints[article.image] || 'bg-navy-100';
 ---
 
 <article class={`card group ${featured ? 'md:col-span-2' : ''}`}>
-  <a href={`/news/${article.slug}`} class="block">
+  <a href={`${prefix}/news/${article.slug}`} class="block">
     <div class={`relative h-44 ${featured ? 'md:h-56' : ''} ${tint} overflow-hidden border-b border-navy-200`}>
       <div class="absolute inset-0 flex items-center justify-center">
         <span class="text-6xl font-extrabold text-slate-100/5 tracking-tighter select-none">
@@ -36,7 +40,7 @@ const tint = tints[article.image] || 'bg-navy-100';
       </div>
       {category && (
         <span class={`absolute top-3 left-3 tag bg-navy/80 text-${category.color} border border-${category.color}/30`}>
-          {category.name}
+          {getCategoryName(category.slug, lang)}
         </span>
       )}
     </div>

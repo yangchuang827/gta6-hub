@@ -1,44 +1,66 @@
 import type { APIRoute } from 'astro';
-import { articles, categories, siteConfig } from '@data/articles';
+import { getArticles, categories, siteConfig } from '@data/articles';
 
 export const GET: APIRoute = ({ site }) => {
   const baseUrl = siteConfig.url;
+  const zhArticles = getArticles('zh');
+  const enArticles = getArticles('en');
+  const articleSlugs = [...new Set([...zhArticles.map(a => a.slug), ...enArticles.map(a => a.slug)])];
 
-  // Static pages
   const staticPages = [
-    { url: `${baseUrl}/`, priority: '1.0', changefreq: 'daily' },
-    { url: `${baseUrl}/news`, priority: '0.9', changefreq: 'daily' },
-    { url: `${baseUrl}/about`, priority: '0.5', changefreq: 'monthly' },
-    { url: `${baseUrl}/privacy`, priority: '0.3', changefreq: 'yearly' },
+    { zhPath: '/', enPath: '/en/', priority: '1.0', changefreq: 'daily' },
+    { zhPath: '/news', enPath: '/en/news', priority: '0.9', changefreq: 'daily' },
+    { zhPath: '/about', enPath: '/en/about', priority: '0.5', changefreq: 'monthly' },
+    { zhPath: '/privacy', enPath: '/en/privacy', priority: '0.3', changefreq: 'yearly' },
   ];
 
-  // Category pages
   const categoryPages = categories.map((cat) => ({
-    url: `${baseUrl}/category/${cat.slug}`,
+    zhPath: `/category/${cat.slug}`,
+    enPath: `/en/category/${cat.slug}`,
     priority: '0.7',
     changefreq: 'weekly',
   }));
 
-  // Article pages
-  const articlePages = articles.map((article) => ({
-    url: `${baseUrl}/news/${article.slug}`,
-    priority: '0.8',
-    changefreq: 'weekly',
-    lastmod: article.updated || article.date,
-  }));
+  const articlePages = articleSlugs.map((slug) => {
+    const article = zhArticles.find(a => a.slug === slug) || enArticles.find(a => a.slug === slug);
+    return {
+      zhPath: `/news/${slug}`,
+      enPath: `/en/news/${slug}`,
+      priority: '0.8',
+      changefreq: 'weekly',
+      lastmod: article?.updated || article?.date || new Date().toISOString().split('T')[0],
+    };
+  });
 
   const allPages = [...staticPages, ...categoryPages, ...articlePages];
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${allPages
   .map(
-    (page) => `  <url>
-    <loc>${page.url}</loc>
-    <lastmod>${page.lastmod || new Date().toISOString().split('T')[0]}</lastmod>
+    (page) => {
+      const zhUrl = `${baseUrl}${page.zhPath}`;
+      const enUrl = `${baseUrl}${page.enPath}`;
+      const lastmod = page.lastmod || new Date().toISOString().split('T')[0];
+      return `  <url>
+    <loc>${zhUrl}</loc>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
-  </url>`
+    <xhtml:link rel="alternate" hreflang="zh" href="${zhUrl}"/>
+    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${zhUrl}"/>
+  </url>
+  <url>
+    <loc>${enUrl}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+    <xhtml:link rel="alternate" hreflang="zh" href="${zhUrl}"/>
+    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${zhUrl}"/>
+  </url>`;
+    }
   )
   .join('\n')}
 </urlset>`;

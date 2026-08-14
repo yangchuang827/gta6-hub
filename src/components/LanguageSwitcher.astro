@@ -1,0 +1,36 @@
+---
+import type { Lang } from '../i18n/ui';
+import { languages } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  currentPath: string;
+}
+
+const { lang, currentPath } = Astro.props;
+
+const otherLang: Lang = lang === 'zh' ? 'en' : 'zh';
+
+let targetPath: string;
+if (lang === 'zh') {
+  targetPath = `/en${currentPath === '/' ? '' : currentPath}`;
+} else {
+  targetPath = currentPath.replace(/^\/en/, '') || '/';
+}
+
+const currentLabel = languages[lang].label;
+const otherLabel = languages[otherLang].label;
+---
+
+<a
+  href={targetPath}
+  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold border transition-all duration-200"
+  style={lang === 'zh'
+    ? 'border-navy-200 text-slate-300 hover:text-accent hover:border-accent/40'
+    : 'border-navy-200 text-slate-300 hover:text-accent hover:border-accent/40'}
+  aria-label={`Switch to ${otherLabel}`}
+>
+  <span class={lang === 'zh' ? 'text-accent' : 'text-slate-400'}>中</span>
+  <span class="text-slate-500">/</span>
+  <span class={lang === 'en' ? 'text-accent' : 'text-slate-400'}>EN</span>
+</a>

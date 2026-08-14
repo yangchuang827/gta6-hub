@@ -3,9 +3,9 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import ArticleCard from '@components/ArticleCard.astro';
 import AdSlot from '@components/AdSlot.astro';
 import { getArticles, categories, getCategoryName } from '@data/articles';
-import { t } from '../../i18n/ui';
+import { t } from '../../../i18n/ui';
 
-const lang = 'zh' as const;
+const lang = 'en' as const;
 const allArticles = getArticles(lang);
 
 export function getStaticPaths() {
@@ -26,7 +26,7 @@ const catName = getCategoryName(cat.slug, lang);
 <BaseLayout
   lang={lang}
   title={catName}
-  description={`浏览 GTA6 ${catName} 分类下的全部文章。${categoryArticles.length} 篇相关资讯。`}
+  description={`Browse all GTA6 ${catName} articles. ${categoryArticles.length} articles available.`}
   canonicalPath={`/category/${cat.slug}`}
 >
   <section class="page-banner">
@@ -37,9 +37,9 @@ const catName = getCategoryName(cat.slug, lang);
     <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-vice-pink/30 to-transparent"></div>
     <div class="container-page relative z-10 py-16 md:py-20">
       <div class="flex items-center gap-2 text-sm text-slate-400 mb-3">
-        <a href="/" class="hover:text-accent">{t(lang, 'nav.home')}</a>
+        <a href="/en" class="hover:text-accent">{t(lang, 'nav.home')}</a>
         <span>/</span>
-        <a href="/news" class="hover:text-accent">{t(lang, 'nav.news')}</a>
+        <a href="/en/news" class="hover:text-accent">{t(lang, 'nav.news')}</a>
         <span>/</span>
         <span class={`text-${cat.color}`}>{catName}</span>
       </div>
@@ -57,8 +57,8 @@ const catName = getCategoryName(cat.slug, lang);
       </div>
     ) : (
       <div class="text-center py-20">
-        <p class="text-slate-300 mb-4">{lang === 'en' ? 'No articles in this category yet' : '该分类暂无文章'}</p>
-        <a href="/news" class="text-accent hover:text-accent-dark font-medium">{t(lang, 'nav.news')} &rarr;</a>
+        <p class="text-slate-300 mb-4">No articles in this category yet</p>
+        <a href="/en/news" class="text-accent hover:text-accent-dark font-medium">{t(lang, 'nav.news')} &rarr;</a>
       </div>
     )}
   </div>

@@ -4,13 +4,25 @@ import { siteConfig } from '@data/articles';
 ---
 
 <BaseLayout
+  lang="zh"
   title="关于我们"
   description="了解 GTA6 Hub - 致力于为玩家提供最全面、最及时的 GTA6 资讯和游戏指南。"
+  canonicalPath="/about"
 >
+  <section class="page-banner">
+    <div class="page-banner-bg bg-about-vice"></div>
+    <div class="absolute inset-0 page-banner-overlay"></div>
+    <div class="absolute inset-0 page-banner-overlay-side"></div>
+    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-vice-pink via-vice-purple to-vice-orange"></div>
+    <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-vice-pink/30 to-transparent"></div>
+    <div class="container-page relative z-10 py-16 md:py-20">
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-white neon-text">关于 GTA6 Hub</h1>
+      <p class="text-slate-200 text-lg max-w-2xl">致力于为全球玩家提供最全面、最及时的 GTA6 资讯和游戏指南。</p>
+    </div>
+  </section>
+
   <section class="container-page py-16">
     <div class="max-w-3xl mx-auto">
-      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-8 text-slate-100">关于 GTA6 Hub</h1>
-
       <div class="prose-content">
         <p>
           {siteConfig.name} 是一个专注于侠盗猎车手6 (GTA VI) 的粉丝资讯网站。我们的目标是

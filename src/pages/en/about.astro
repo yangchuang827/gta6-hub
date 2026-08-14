@@ -1,0 +1,62 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { siteConfig } from '@data/articles';
+---
+
+<BaseLayout
+  lang="en"
+  title="About Us"
+  description="Learn about GTA6 Hub - dedicated to bringing players the most comprehensive and timely GTA6 news and game guides."
+  canonicalPath="/about"
+>
+  <section class="page-banner">
+    <div class="page-banner-bg bg-about-vice"></div>
+    <div class="absolute inset-0 page-banner-overlay"></div>
+    <div class="absolute inset-0 page-banner-overlay-side"></div>
+    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-vice-pink via-vice-purple to-vice-orange"></div>
+    <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-vice-pink/30 to-transparent"></div>
+    <div class="container-page relative z-10 py-16 md:py-20">
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-white neon-text">About GTA6 Hub</h1>
+      <p class="text-slate-200 text-lg max-w-2xl">Dedicated to bringing players the most comprehensive and timely GTA6 news and game guides.</p>
+    </div>
+  </section>
+
+  <section class="container-page py-16">
+    <div class="max-w-3xl mx-auto">
+      <div class="prose-content">
+        <p>
+          GTA6 Hub is an independent fan site dedicated to Grand Theft Auto VI. We provide the most comprehensive and timely GTA6 news, trailer breakdowns, character profiles, and game guides for players worldwide.
+        </p>
+
+        <h2>Our Mission</h2>
+        <p>
+          We believe GTA6 is more than just a game - it's a cultural phenomenon. Our mission is to be the go-to source for everything GTA6, from official announcements to deep-dive analysis and community discussions.
+        </p>
+
+        <h2>What We Offer</h2>
+        <ul>
+          <li><strong>Latest News</strong> - Real-time updates on all GTA6 developments</li>
+          <li><strong>Trailer Analysis</strong> - Frame-by-frame breakdowns of every trailer</li>
+          <li><strong>Character Database</strong> - Detailed profiles of Lucia, Jason, and the supporting cast</li>
+          <li><strong>Gameplay Guides</strong> - Tips, tricks, and strategies</li>
+          <li><strong>Release Date Tracker</strong> - Countdown to November 19, 2026</li>
+        </ul>
+
+        <h2>Bilingual Coverage</h2>
+        <p>
+          We provide content in both English and Chinese, serving the global GTA6 community. Whether you're looking for the latest Western gaming media coverage or Chinese community insights, we've got you covered.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          Have a tip, question, or partnership inquiry? Reach us at <a href="mailto:contact@gameinfos.org">contact@gameinfos.org</a>
+        </p>
+
+        <h2>Disclaimer</h2>
+        <p>
+          GTA6 Hub is an unofficial fan site and is not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive. All trademarks belong to their respective owners.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
