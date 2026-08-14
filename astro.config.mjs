@@ -3,7 +3,7 @@ import tailwind from '@astrojs/tailwind';
 
 import cloudflare from "@astrojs/cloudflare";
 
-const SITE_URL = 'https://gameinfos.org';
+const SITE_URL = 'https://gta6.gameinfos.org';
 
 export default defineConfig({
   site: SITE_URL,
