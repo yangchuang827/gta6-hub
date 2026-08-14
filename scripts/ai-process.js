@@ -304,6 +304,14 @@ async function main() {
   if (success > 0) {
     console.log(`\nNext step: Review generated articles in src/data/auto/`);
     console.log(`Then run: npm run build && npm run preview`);
+  } else if (feedItems.length > 0) {
+    // All items failed — exit non-zero so the workflow fails visibly
+    // rather than silently "succeeding" with zero articles.
+    console.error(
+      `\n[ERROR] All ${feedItems.length} items failed to process. ` +
+      `Check GEMINI_API_KEY and network connectivity to Google API.`
+    );
+    process.exit(1);
   }
 }
 

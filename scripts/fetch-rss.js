@@ -213,14 +213,11 @@ async function main() {
   console.log(`New items (not yet processed): ${newItems.length}`);
   console.log(`Output: ${FEEDS_FILE}`);
 
-  // Write to cache file
+  // Write only the NEW items to feeds.json for ai-process.js to consume.
+  // IMPORTANT: Do NOT mark items as processed here. They are only marked
+  // after ai-process.js successfully generates an article (see markProcessed).
+  // Marking them early would "eat" the news if the AI step fails.
   writeFileSync(FEEDS_FILE, JSON.stringify(newItems, null, 2));
-
-  // Also update processed slugs (add all found items to prevent reprocessing)
-  for (const item of allItems) {
-    processedSlugs.add(item.slug);
-  }
-  writeFileSync(PROCESSED_FILE, JSON.stringify([...processedSlugs], null, 2));
 
   console.log(`\nNext step: Run ai-process.js to generate articles from these feeds.`);
 
