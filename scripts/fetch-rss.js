@@ -9,7 +9,7 @@
  */
 
 import RSSParser from 'rss-parser';
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -116,6 +116,33 @@ function generateSlug(title) {
     .substring(0, 80);
 }
 
+import { titleSimilarity, SIMILARITY_THRESHOLD } from './title-sim.js';
+
+// ---------------------------------------------------------------------------
+// Title-similarity dedup: two items with near-identical titles describe the
+// same story (esp. common on Reddit where the same topic gets re-posted).
+// ---------------------------------------------------------------------------
+
+/**
+ * Load titles of already-generated articles (from src/data/auto/*.zh.json)
+ * so we can skip news whose story has already been published.
+ */
+function loadExistingTitles() {
+  const AUTO_DIR = join(__dirname, '..', 'src', 'data', 'auto');
+  const titles = [];
+  if (!existsSync(AUTO_DIR)) return titles;
+  for (const f of readdirSync(AUTO_DIR)) {
+    if (!f.endsWith('.zh.json')) continue;
+    try {
+      const data = JSON.parse(readFileSync(join(AUTO_DIR, f), 'utf-8'));
+      if (data.title) titles.push(data.title);
+    } catch {
+      // skip unparseable file
+    }
+  }
+  return titles;
+}
+
 /**
  * Load previously processed slugs
  */
@@ -175,6 +202,10 @@ async function main() {
   const processedSlugs = loadProcessedSlugs();
   console.log(`Previously processed: ${processedSlugs.size} articles\n`);
 
+  // Titles of already-published articles → skip stories we've already covered
+  const existingTitles = loadExistingTitles();
+  console.log(`Existing articles on site: ${existingTitles.length}\n`);
+
   // Fetch all feeds in parallel
   console.log('Fetching RSS feeds...\n');
   const feedPromises = RSS_SOURCES.map((source) => fetchFeed(source));
@@ -195,6 +226,11 @@ async function main() {
       const slug = generateSlug(item.title);
       if (processedSlugs.has(slug)) continue;
 
+      // Skip stories whose title is too similar to an already-published article
+      if (existingTitles.some((t) => titleSimilarity(item.title, t) >= SIMILARITY_THRESHOLD)) {
+        continue;
+      }
+
       allItems.push({
         ...item,
         slug,
@@ -202,14 +238,46 @@ async function main() {
     }
   }
 
+  // Deduplicate within this batch: if two fetched items tell the same story,
+  // keep only the one from the higher-priority source (P0 > P1 > P2).
+  const uniqueItems = [];
+  for (const item of allItems) {
+    const dup = uniqueItems.find((u) => titleSimilarity(u.title, item.title) >= SIMILARITY_THRESHOLD);
+    if (dup) {
+      const dupRank = dup.sourcePriority || 'P9';
+      const itemRank = item.sourcePriority || 'P9';
+      if (itemRank < dupRank) {
+        // new item is from a better source → replace the duplicate
+        uniqueItems.splice(uniqueItems.indexOf(dup), 1);
+        uniqueItems.push(item);
+      }
+      continue;
+    }
+    uniqueItems.push(item);
+  }
+
+  // Source quota: cap low-value community sources so media/editorial sources dominate
+  const SOURCE_QUOTA = { 'Reddit r/GTA6': 2 };
+  const sourceCounts = {};
+  const quotaItems = [];
+  for (const item of uniqueItems) {
+    const quota = SOURCE_QUOTA[item.source];
+    const used = sourceCounts[item.source] || 0;
+    if (quota !== undefined && used >= quota) continue;
+    sourceCounts[item.source] = used + 1;
+    quotaItems.push(item);
+  }
+
   // Sort by date (newest first)
-  allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  quotaItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
   // Limit to 20 items per run to avoid API rate limits
-  const newItems = allItems.slice(0, 20);
+  const newItems = quotaItems.slice(0, 20);
 
   console.log(`\n=== Summary ===`);
   console.log(`Total GTA6 items found: ${allItems.length}`);
+  console.log(`After same-batch dedup: ${uniqueItems.length}`);
+  console.log(`After source quota: ${quotaItems.length}`);
   console.log(`New items (not yet processed): ${newItems.length}`);
   console.log(`Output: ${FEEDS_FILE}`);
 
