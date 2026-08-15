@@ -108,6 +108,7 @@ Your task: Transform the following raw news item into TWO original, high-quality
 3. If you add background or analysis that goes beyond the source, clearly frame it as analysis/context/speculation (e.g. "有分析认为…" / "this is likely…"), never as confirmed fact.
 4. For content from community/rumor sources, explicitly note that the information is unconfirmed (e.g. "（传闻，未经证实）" / "(unconfirmed rumor)").
 5. Do NOT invent the names or statements of real people (executives, insiders, journalists) unless they appear in the source material.
+6. NEVER output placeholder markers like TODO, TBD, XXX, "[insert...]", "lorem ipsum", or unfinished sentences. Every article must be complete, publishable text.
 
 ## Output Format (STRICT JSON)
 Return ONLY a valid JSON object, no markdown code blocks, no extra text:

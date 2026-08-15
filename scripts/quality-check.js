@@ -7,7 +7,7 @@
  * Usage: node scripts/quality-check.js
  */
 
-import { readFileSync, readdirSync, existsSync } from 'fs';
+import { readFileSync, readdirSync, existsSync, unlinkSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -21,7 +21,7 @@ const VALID_SOURCE_TYPES = ['official', 'media', 'community', 'rumor'];
 
 // Placeholder / hallucination markers that indicate the AI output is not real content
 const PLACEHOLDER_PATTERNS = [
-  /TODO/i,
+  /\bTODO\b/i, // word-boundary so "to-do"/"to do" are NOT flagged
   /lorem ipsum/i,
   /\[insert[^\]]*\]/i,
   /placeholder/i,
@@ -184,6 +184,7 @@ function main() {
   let totalIssues = 0;
   let totalWarnings = 0;
   const report = [];
+  const deleteFailed = process.argv.includes('--delete-failed');
 
   for (const file of files) {
     const filepath = join(AUTO_DIR, file);
@@ -207,10 +208,29 @@ function main() {
       totalIssues += issues.length;
       totalWarnings += warnings.length;
 
+      // In --delete-failed mode, remove FAILED files so only good articles ship.
+      if (status === 'FAIL' && deleteFailed) {
+        try {
+          unlinkSync(filepath);
+          console.log(`  🗑️ Deleted failed article: ${file}`);
+        } catch (e) {
+          console.log(`  ⚠️ Could not delete ${file}: ${e.message}`);
+        }
+      }
+
       report.push({ file, status, issues, warnings, title: data.title });
     } catch (e) {
       console.log(`✗ [ERROR] ${file}: Failed to parse JSON - ${e.message}`);
       totalIssues++;
+      report.push({ file, status: 'FAIL', issues: ['JSON parse error'], warnings: [], title: '' });
+      if (deleteFailed) {
+        try {
+          unlinkSync(filepath);
+          console.log(`  🗑️ Deleted unparseable article: ${file}`);
+        } catch (e2) {
+          console.log(`  ⚠️ Could not delete ${file}: ${e2.message}`);
+        }
+      }
     }
   }
 
@@ -222,8 +242,16 @@ function main() {
   console.log(`Total issues: ${totalIssues}`);
   console.log(`Total warnings: ${totalWarnings}`);
 
-  // Exit with error if any critical issues found
+  // Exit policy:
+  // - --delete-failed: bad files removed; if at least one good file remains, ship them (exit 0),
+  //   otherwise fail (exit 1).
+  // - default (no flag): any critical issue fails the run (exit 1).
+  const failedCount = report.filter((r) => r.status === 'FAIL').length;
   if (totalIssues > 0) {
+    if (deleteFailed && files.length - failedCount > 0) {
+      console.log('\n⚠️ Failed articles removed; remaining articles will be published.');
+      process.exit(0);
+    }
     console.log('\n❌ Quality check failed - critical issues found.');
     process.exit(1);
   } else {
