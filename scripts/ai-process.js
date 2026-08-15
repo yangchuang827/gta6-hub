@@ -21,7 +21,7 @@ const OUTPUT_DIR = join(__dirname, '..', 'src', 'data', 'auto');
 const PROCESSED_FILE = join(CACHE_DIR, 'processed-slugs.json');
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.7-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 if (!GEMINI_API_KEY) {
