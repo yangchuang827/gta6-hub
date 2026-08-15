@@ -21,7 +21,7 @@ const OUTPUT_DIR = join(__dirname, '..', 'src', 'data', 'auto');
 const PROCESSED_FILE = join(CACHE_DIR, 'processed-slugs.json');
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.7-flash';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 if (!GEMINI_API_KEY) {
@@ -58,7 +58,7 @@ function inferSourceType(sourceName, sourceType) {
 /**
  * Call Gemini API to generate bilingual article
  */
-async function generateArticle(feedItem) {
+async function generateArticle(feedItem, attempt = 1) {
   const category = inferCategory(feedItem.title, feedItem.content);
   const sourceType = inferSourceType(feedItem.source, feedItem.sourceType);
 
@@ -134,42 +134,61 @@ Return ONLY a valid JSON object, no markdown code blocks, no extra text:
     },
   };
 
-  const response = await fetch(GEMINI_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': GEMINI_API_KEY,
-    },
-    body: JSON.stringify(requestBody),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Gemini API error ${response.status}: ${errorText.substring(0, 500)}`);
-  }
-
-  const data = await response.json();
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-  if (!text) {
-    throw new Error('Gemini API returned empty response');
-  }
-
-  // Parse JSON response (Gemini with responseMimeType should return clean JSON)
-  let article;
   try {
-    article = JSON.parse(text);
-  } catch {
-    // Fallback: try to extract JSON from text
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      article = JSON.parse(jsonMatch[0]);
-    } else {
-      throw new Error('Failed to parse Gemini response as JSON');
+    const response = await fetch(GEMINI_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': GEMINI_API_KEY,
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      // Retry on transient server/rate errors (503 high demand, 429 quota)
+      if (attempt < 3 && (response.status === 503 || response.status === 429)) {
+        const waitMs = 5000 * attempt;
+        console.log(`  [RETRY ${attempt}/3] Gemini returned ${response.status}, retrying in ${waitMs / 1000}s...`);
+        await new Promise((r) => setTimeout(r, waitMs));
+        return generateArticle(feedItem, attempt + 1);
+      }
+      throw new Error(`Gemini API error ${response.status}: ${errorText.substring(0, 500)}`);
     }
+
+    const data = await response.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!text) {
+      throw new Error('Gemini API returned empty response');
+    }
+
+    // Parse JSON response (Gemini with responseMimeType should return clean JSON)
+    let article;
+    try {
+      article = JSON.parse(text);
+    } catch {
+      // Fallback: try to extract JSON from text
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        article = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error('Failed to parse Gemini response as JSON');
+      }
+    }
+
+    return article;
+  } catch (err) {
+    // Retry on transient network failures (e.g. proxy hiccup, "fetch failed")
+    if (attempt < 3 && /fetch failed|network|ECONN|ETIMEDOUT|ENOTFOUND/i.test(err.message)) {
+      const waitMs = 5000 * attempt;
+      console.log(`  [RETRY ${attempt}/3] Network error: ${err.message.substring(0, 80)}, retrying in ${waitMs / 1000}s...`);
+      await new Promise((r) => setTimeout(r, waitMs));
+      return generateArticle(feedItem, attempt + 1);
+    }
+    throw err;
   }
 
-  return article;
 }
 
 /**
