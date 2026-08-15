@@ -19,6 +19,23 @@ const VALID_CATEGORIES = ['news', 'trailers', 'gameplay', 'characters', 'guides'
 const VALID_LANGS = ['zh', 'en'];
 const VALID_SOURCE_TYPES = ['official', 'media', 'community', 'rumor'];
 
+// Placeholder / hallucination markers that indicate the AI output is not real content
+const PLACEHOLDER_PATTERNS = [
+  /TODO/i,
+  /lorem ipsum/i,
+  /\[insert[^\]]*\]/i,
+  /placeholder/i,
+  /here\.?\.\.\./i,
+  /XXX/i,
+  /待补充/i,
+  /待添加/i,
+  /这里插入/i,
+  /在此输入/i,
+  /占位符/i,
+  /your text here/i,
+  /TBD/i,
+];
+
 // Minimum content lengths
 const MIN_ZH_CONTENT = 400; // Chinese characters
 const MIN_EN_CONTENT = 300; // English words
@@ -98,6 +115,15 @@ function checkArticle(filename, data) {
     warnings.push(`Invalid sourceType: "${data.sourceType}". Valid: ${VALID_SOURCE_TYPES.join(', ')}`);
   }
 
+  // Traceability: auto-generated articles MUST carry a source + sourceType so
+  // readers can verify facts. Missing source = facts cannot be traced.
+  if (!data.source) {
+    issues.push('Missing source — article facts cannot be traced back to a news item');
+  }
+  if (!data.sourceType) {
+    issues.push('Missing sourceType — cannot tell official/media/community/rumor');
+  }
+
   // Check content length
   if (data.content) {
     if (lang === 'zh') {
@@ -118,12 +144,21 @@ function checkArticle(filename, data) {
     warnings.push('No tags specified');
   }
 
-  // Check for placeholder content
-  if (data.content && data.content.includes('TODO')) {
-    issues.push('Content contains TODO placeholder');
+  // Check for placeholder / hallucination markers (expanded beyond TODO/lorem)
+  if (data.content) {
+    for (const pattern of PLACEHOLDER_PATTERNS) {
+      if (pattern.test(data.content)) {
+        issues.push(`Content contains placeholder/hallucination marker: ${pattern}`);
+      }
+    }
   }
-  if (data.content && data.content.includes('lorem ipsum')) {
-    issues.push('Content contains lorem ipsum placeholder');
+
+  // Rumor articles should be visibly marked as unconfirmed in title or content
+  if (data.sourceType === 'rumor' || data.category === 'rumors') {
+    const text = `${data.title} ${data.content}`;
+    if (!/传闻|未经证实|rumor|unconfirmed|speculat|reportedly|leak/i.test(text)) {
+      warnings.push('Rumor content is not clearly marked as unconfirmed');
+    }
   }
 
   return { issues, warnings };

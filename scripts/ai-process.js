@@ -102,6 +102,13 @@ Your task: Transform the following raw news item into TWO original, high-quality
 - If from Reddit/community: sourceType = "community"
 - If the content is speculative/unverified: sourceType = "rumor"
 
+## Fact-Checking Rules (CRITICAL — apply to BOTH languages)
+1. Base every factual claim ONLY on the source material provided above.
+2. NEVER invent dates, prices, quotes, release windows, features, or official statements that are not in the source material. Fabricated "official announcements" are absolutely forbidden.
+3. If you add background or analysis that goes beyond the source, clearly frame it as analysis/context/speculation (e.g. "有分析认为…" / "this is likely…"), never as confirmed fact.
+4. For content from community/rumor sources, explicitly note that the information is unconfirmed (e.g. "（传闻，未经证实）" / "(unconfirmed rumor)").
+5. Do NOT invent the names or statements of real people (executives, insiders, journalists) unless they appear in the source material.
+
 ## Output Format (STRICT JSON)
 Return ONLY a valid JSON object, no markdown code blocks, no extra text:
 

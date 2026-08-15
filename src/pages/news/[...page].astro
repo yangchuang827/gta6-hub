@@ -2,19 +2,32 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import ArticleCard from '@components/ArticleCard.astro';
 import AdSlot from '@components/AdSlot.astro';
+import Pagination from '@components/Pagination.astro';
 import { getArticles, categories, getCategoryName } from '@data/articles';
-import { t } from '../../../i18n/ui';
+import { t } from '../../i18n/ui';
 
-const lang = 'en' as const;
-const articles = getArticles(lang);
-const sortedArticles = [...articles].sort(
+const lang = 'zh' as const;
+const PAGE_SIZE = 24;
+
+export async function getStaticPaths({ paginate }) {
+  // NOTE: must be self-contained — Astro hoists getStaticPaths, so it cannot
+  // reference component-scope variables like `lang`/`PAGE_SIZE`.
+  const articles = getArticles('zh').sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+  return paginate(articles, { pageSize: 24 });
+}
+
+const { page } = Astro.props;
+const articles = getArticles(lang).sort(
   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 );
+const totalArticles = articles.length;
 
 const displayItems: Array<{ type: 'article' | 'ad'; data: any }> = [];
-sortedArticles.forEach((article, index) => {
+page.data.forEach((article, index) => {
   displayItems.push({ type: 'article', data: article });
-  if ((index + 1) % 4 === 0 && index < sortedArticles.length - 1) {
+  if ((index + 1) % 4 === 0 && index < page.data.length - 1) {
     displayItems.push({ type: 'ad', data: null });
   }
 });
@@ -23,8 +36,7 @@ sortedArticles.forEach((article, index) => {
 <BaseLayout
   lang={lang}
   title={t(lang, 'news.title')}
-  description="Browse all GTA6 Hub articles including latest news, trailer breakdowns, character profiles, and gameplay guides."
-  canonicalPath="/news"
+  description="浏览 GTA6 Hub 的全部资讯文章，包括最新新闻、预告片解析、角色介绍、玩法指南等内容。"
 >
   <section class="page-banner">
     <div class="page-banner-bg bg-news-vice"></div>
@@ -34,18 +46,18 @@ sortedArticles.forEach((article, index) => {
     <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-vice-pink/40 to-transparent"></div>
     <div class="container-page relative z-10 py-16 md:py-20">
       <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3 text-white neon-text">{t(lang, 'news.title')}</h1>
-      <p class="text-slate-200 text-lg">{articles.length} {t(lang, 'news.subtitle')}</p>
+      <p class="text-slate-200 text-lg">{totalArticles} {t(lang, 'news.subtitle')}</p>
     </div>
   </section>
 
   <div class="container-page py-6">
     <div class="flex flex-wrap gap-2">
-      <a href="/en/news" class="px-4 py-2 rounded text-sm font-medium bg-accent text-navy hover:shadow-[0_0_16px_rgba(100,255,218,0.25)] transition-all">
+      <a href="/news" class="px-4 py-2 rounded text-sm font-medium bg-accent text-navy hover:shadow-[0_0_16px_rgba(100,255,218,0.25)] transition-all">
         {t(lang, 'news.all')}
       </a>
       {categories.map((cat) => (
         <a
-          href={`/en/category/${cat.slug}`}
+          href={`/category/${cat.slug}`}
           class={`px-4 py-2 rounded text-sm font-medium text-slate-300 bg-navy-50 border border-navy-200 hover:border-${cat.color}/50 hover:text-${cat.color} transition-colors`}
         >
           {getCategoryName(cat.slug, lang)}
@@ -54,7 +66,7 @@ sortedArticles.forEach((article, index) => {
     </div>
   </div>
 
-  <div class="container-page pb-16">
+  <div class="container-page pb-4">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {displayItems.map((item) => (
         item.type === 'article' ? (
@@ -66,5 +78,12 @@ sortedArticles.forEach((article, index) => {
         )
       ))}
     </div>
+
+    <Pagination
+      lang={lang}
+      totalPages={page.lastPage}
+      currentPage={page.currentPage}
+      basePath="/news"
+    />
   </div>
 </BaseLayout>

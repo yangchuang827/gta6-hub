@@ -50,7 +50,6 @@ jobs:
       - name: Quality check
         if: steps.check.outputs.count != '0'
         run: node scripts/quality-check.js
-        continue-on-error: true
 
       - name: Build site (verify no errors)
         if: steps.check.outputs.count != '0'

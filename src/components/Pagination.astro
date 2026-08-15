@@ -1,0 +1,80 @@
+---
+interface Props {
+  lang: 'zh' | 'en';
+  totalPages: number;
+  currentPage: number;
+  basePath: string; // '/news' or '/en/news'
+}
+
+const { lang, totalPages, currentPage, basePath } = Astro.props;
+
+const prevHref =
+  currentPage > 1 ? (currentPage - 1 === 1 ? basePath : `${basePath}/${currentPage - 1}`) : null;
+const nextHref = currentPage < totalPages ? `${basePath}/${currentPage + 1}` : null;
+
+const prevLabel = lang === 'en' ? 'Prev' : '上一页';
+const nextLabel = lang === 'en' ? 'Next' : '下一页';
+
+// Build page list with ellipsis: [1, ..., 4, 5, 6, ..., 12]
+function pageItems(current: number, total: number): (number | '...')[] {
+  const candidates = new Set([1, total, current - 1, current, current + 1]);
+  const sorted = [...candidates].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
+  const out: (number | '...')[] = [];
+  let prev = 0;
+  for (const p of sorted) {
+    if (p - prev > 1) out.push('...');
+    out.push(p);
+    prev = p;
+  }
+  return out;
+}
+
+const pages = pageItems(currentPage, totalPages);
+---
+
+{totalPages > 1 && (
+  <nav class="flex flex-wrap items-center justify-center gap-2 my-12" aria-label="pagination">
+    {prevHref ? (
+      <a
+        href={prevHref}
+        class="px-4 py-2 rounded text-sm font-medium text-slate-300 bg-navy-50 border border-navy-200 hover:border-vice-pink/50 hover:text-vice-pink transition-colors"
+      >
+        &lsaquo; {prevLabel}
+      </a>
+    ) : (
+      <span class="px-4 py-2 rounded text-sm font-medium text-slate-600 bg-navy-50 border border-navy-200/50 cursor-not-allowed opacity-60">
+        &lsaquo; {prevLabel}
+      </span>
+    )}
+
+    {pages.map((p) =>
+      p === '...' ? (
+        <span class="px-2 py-2 text-sm text-slate-500 select-none">&hellip;</span>
+      ) : p === currentPage ? (
+        <span class="px-4 py-2 rounded text-sm font-bold text-navy bg-accent shadow-[0_0_12px_rgba(100,255,218,0.3)]">
+          {p}
+        </span>
+      ) : (
+        <a
+          href={p === 1 ? basePath : `${basePath}/${p}`}
+          class="px-4 py-2 rounded text-sm font-medium text-slate-300 bg-navy-50 border border-navy-200 hover:border-vice-pink/50 hover:text-vice-pink transition-colors"
+        >
+          {p}
+        </a>
+      )
+    )}
+
+    {nextHref ? (
+      <a
+        href={nextHref}
+        class="px-4 py-2 rounded text-sm font-medium text-slate-300 bg-navy-50 border border-navy-200 hover:border-vice-pink/50 hover:text-vice-pink transition-colors"
+      >
+        {nextLabel} &rsaquo;
+      </a>
+    ) : (
+      <span class="px-4 py-2 rounded text-sm font-medium text-slate-600 bg-navy-50 border border-navy-200/50 cursor-not-allowed opacity-60">
+        {nextLabel} &rsaquo;
+      </span>
+    )}
+  </nav>
+)}
