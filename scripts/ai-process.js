@@ -146,8 +146,9 @@ Return ONLY a valid JSON object, no markdown code blocks, no extra text:
 
     if (!response.ok) {
       const errorText = await response.text();
-      // Retry on transient server/rate errors (503 high demand, 429 quota)
-      if (attempt < 3 && (response.status === 503 || response.status === 429)) {
+      // Retry on transient server errors only (503 high demand).
+      // 429 = quota exhausted (free tier), retrying just burns more quota — skip instead.
+      if (attempt < 3 && response.status === 503) {
         const waitMs = 5000 * attempt;
         console.log(`  [RETRY ${attempt}/3] Gemini returned ${response.status}, retrying in ${waitMs / 1000}s...`);
         await new Promise((r) => setTimeout(r, waitMs));
@@ -274,11 +275,22 @@ async function main() {
     process.exit(1);
   }
 
-  const feedItems = JSON.parse(readFileSync(FEEDS_FILE, 'utf-8'));
+  // Cap how many items we process per run to stay within free-tier quota.
+  // The free tier for some keys (e.g. OAuth tokens) is only ~20 requests/day.
+  const MAX_ITEMS = parseInt(process.env.MAX_ITEMS || '6', 10);
+
+  let feedItems = JSON.parse(readFileSync(FEEDS_FILE, 'utf-8'));
 
   if (feedItems.length === 0) {
     console.log('No new feeds to process.');
     process.exit(0);
+  }
+
+  if (feedItems.length > MAX_ITEMS) {
+    console.log(
+      `Note: capping to first ${MAX_ITEMS} items (of ${feedItems.length}) to protect free-tier quota. Set MAX_ITEMS to change.`
+    );
+    feedItems = feedItems.slice(0, MAX_ITEMS);
   }
 
   console.log(`Found ${feedItems.length} feed items to process.\n`);
