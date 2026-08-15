@@ -10,9 +10,10 @@
  * Requires: GEMINI_API_KEY environment variable
  */
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, unlinkSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { checkArticleData } from './quality-lib.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CACHE_DIR = join(__dirname, 'cache');
@@ -57,8 +58,10 @@ function inferSourceType(sourceName, sourceType) {
 
 /**
  * Call Gemini API to generate bilingual article
+ * @param {object} feedItem
+ * @param {string} fixHint - quality-control feedback from a rejected attempt ('' on first try)
  */
-async function generateArticle(feedItem, attempt = 1) {
+async function generateArticle(feedItem, { fixHint = '', attempt = 1 } = {}) {
   const category = inferCategory(feedItem.title, feedItem.content);
   const sourceType = inferSourceType(feedItem.source, feedItem.sourceType);
 
@@ -109,6 +112,10 @@ Your task: Transform the following raw news item into TWO original, high-quality
 4. For content from community/rumor sources, explicitly note that the information is unconfirmed (e.g. "（传闻，未经证实）" / "(unconfirmed rumor)").
 5. Do NOT invent the names or statements of real people (executives, insiders, journalists) unless they appear in the source material.
 6. NEVER output placeholder markers like TODO, TBD, XXX, "[insert...]", "lorem ipsum", or unfinished sentences. Every article must be complete, publishable text.
+${fixHint ? `## PREVIOUS ATTEMPT WAS REJECTED — FIX THESE ISSUES (CRITICAL)
+Your previous version did NOT pass our quality control. Rewrite the article and fix ALL of the following problems:
+${fixHint}
+Do NOT repeat these mistakes. Your new version will be checked again against the same rules.` : ''}
 
 ## Output Format (STRICT JSON)
 Return ONLY a valid JSON object, no markdown code blocks, no extra text:
@@ -160,7 +167,7 @@ Return ONLY a valid JSON object, no markdown code blocks, no extra text:
         const waitMs = 5000 * attempt;
         console.log(`  [RETRY ${attempt}/3] Gemini returned ${response.status}, retrying in ${waitMs / 1000}s...`);
         await new Promise((r) => setTimeout(r, waitMs));
-        return generateArticle(feedItem, attempt + 1);
+        return generateArticle(feedItem, { fixHint, attempt: attempt + 1 });
       }
       throw new Error(`Gemini API error ${response.status}: ${errorText.substring(0, 500)}`);
     }
@@ -193,7 +200,7 @@ Return ONLY a valid JSON object, no markdown code blocks, no extra text:
       const waitMs = 5000 * attempt;
       console.log(`  [RETRY ${attempt}/3] Network error: ${err.message.substring(0, 80)}, retrying in ${waitMs / 1000}s...`);
       await new Promise((r) => setTimeout(r, waitMs));
-      return generateArticle(feedItem, attempt + 1);
+      return generateArticle(feedItem, { fixHint, attempt: attempt + 1 });
     }
     throw err;
   }
@@ -307,27 +314,78 @@ async function main() {
   let failed = 0;
   const processedSlugs = [];
 
+  const MAX_ATTEMPTS = parseInt(process.env.MAX_ATTEMPTS || '3', 10); // self-heal retries per article
+
   for (let i = 0; i < feedItems.length; i++) {
     const item = feedItems[i];
     console.log(`[${i + 1}/${feedItems.length}] Processing: ${item.title.substring(0, 60)}...`);
 
-    try {
+    let savedSlug = null;
+    let fixHint = '';
+    let accepted = false;
+
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
       // Rate limit: wait between API calls (Gemini free tier: 15 req/min)
-      if (i > 0) {
+      if (i > 0 || attempt > 1) {
         await new Promise((resolve) => setTimeout(resolve, 4000));
       }
 
-      const article = await generateArticle(item);
-      const paths = saveArticle(article, item);
-      processedSlugs.push(article.slug || item.slug);
+      try {
+        if (attempt > 1) {
+          console.log(`  [Attempt ${attempt}/${MAX_ATTEMPTS}] re-generating with fix hints...`);
+        }
+        const article = await generateArticle(item, { fixHint });
+        const paths = saveArticle(article, item);
+        savedSlug = article.slug || item.slug;
 
-      console.log(`  [OK] Saved: ${paths.zhPath}`);
-      console.log(`       ZH: ${article.title_zh}`);
-      console.log(`       EN: ${article.title_en}`);
-      success++;
-    } catch (err) {
-      console.error(`  [FAIL] ${err.message}`);
-      failed++;
+        // Inline quality approval on BOTH saved files (zh + en)
+        const problems = [];
+        for (const p of [paths.zhPath, paths.enPath]) {
+          const data = JSON.parse(readFileSync(p, 'utf-8'));
+          const { issues } = checkArticleData(data);
+          problems.push(...issues);
+        }
+
+        if (problems.length === 0) {
+          console.log(`  [OK] Saved: ${paths.zhPath}`);
+          console.log(`       ZH: ${article.title_zh}`);
+          console.log(`       EN: ${article.title_en}`);
+          accepted = true;
+          processedSlugs.push(savedSlug);
+          success++;
+          break;
+        }
+
+        // Quality gate rejected this attempt → delete bad files, maybe regenerate
+        console.log(`  [REJECT ${attempt}/${MAX_ATTEMPTS}] ${problems.length} issue(s):`);
+        problems.slice(0, 6).forEach((p) => console.log(`    - ${p}`));
+        for (const p of [paths.zhPath, paths.enPath]) {
+          try {
+            unlinkSync(p);
+          } catch {}
+        }
+
+        if (attempt < MAX_ATTEMPTS) {
+          fixHint = problems.join('\n');
+          console.log('  ↻ Sending issues back to Gemini to fix and regenerate...');
+        } else {
+          console.log(`  [DROP] After ${MAX_ATTEMPTS} attempts, article discarded and marked processed.`);
+          failed++;
+          processedSlugs.push(savedSlug); // never retry this slug again
+        }
+      } catch (err) {
+        console.error(`  [FAIL] ${err.message}`);
+        failed++;
+        // Clean up any partial files from this item
+        if (savedSlug) {
+          for (const ext of ['zh', 'en']) {
+            try {
+              unlinkSync(join(OUTPUT_DIR, `${savedSlug}.${ext}.json`));
+            } catch {}
+          }
+        }
+        break;
+      }
     }
   }
 
