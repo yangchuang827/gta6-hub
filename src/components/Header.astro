@@ -12,6 +12,14 @@ interface Props {
 const { lang = 'zh' } = Astro.props;
 const currentPath = Astro.url.pathname;
 const prefix = lang === 'en' ? '/en' : '';
+
+// Active-link matching: exact OR sub-path (handles trailing "/" and paginated URLs)
+const isActive = (path: string): boolean => {
+  if (currentPath === path) return true;
+  if (path === '/') return false; // home must be exact, don't highlight for everything
+  return currentPath.startsWith(`${path}/`);
+};
+const homePath = prefix + '/';
 ---
 
 <header class="sticky top-0 z-50 border-b border-navy-200/80 bg-navy/85 backdrop-blur-xl">
@@ -27,14 +35,14 @@ const prefix = lang === 'en' ? '/en' : '';
       <nav class="hidden lg:flex items-center gap-1">
         <a
           href={prefix || '/'}
-          class={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentPath === prefix + '/' || currentPath === '/' ? 'text-accent' : 'text-slate-300 hover:text-slate-100'}`}
+          class={`px-3 py-2 rounded text-sm font-medium transition-colors ${isActive(homePath) ? 'text-accent' : 'text-slate-300 hover:text-slate-100'}`}
         >
           {t(lang, 'nav.home')}
         </a>
         {categories.slice(0, 5).map((cat) => (
           <a
             href={`${prefix}/category/${cat.slug}`}
-            class={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentPath === `${prefix}/category/${cat.slug}` ? `text-${cat.color}` : 'text-slate-300 hover:text-slate-100'}`}
+            class={`px-3 py-2 rounded text-sm font-medium transition-colors ${isActive(`${prefix}/category/${cat.slug}`) ? 'text-accent' : 'text-slate-300 hover:text-slate-100'}`}
           >
             {getCategoryName(cat.slug, lang)}
           </a>
@@ -66,11 +74,11 @@ const prefix = lang === 'en' ? '/en' : '';
 
   <div id="mobile-menu" class="hidden lg:hidden border-t border-navy-200 bg-navy">
     <nav class="container-page py-4 flex flex-col gap-1">
-      <a href={prefix || '/'} class="px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-vice-pink hover:bg-navy-50">{t(lang, 'nav.home')}</a>
+      <a href={prefix || '/'} class={`px-3 py-2 rounded text-sm font-medium ${isActive(homePath) ? 'text-accent' : 'text-slate-300 hover:text-vice-pink hover:bg-navy-50'}`}>{t(lang, 'nav.home')}</a>
       {categories.map((cat) => (
         <a
           href={`${prefix}/category/${cat.slug}`}
-          class={`px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-${cat.color} hover:bg-navy-50`}
+          class={`px-3 py-2 rounded text-sm font-medium ${isActive(`${prefix}/category/${cat.slug}`) ? 'text-accent' : 'text-slate-300 hover:text-vice-pink hover:bg-navy-50'}`}
         >
           {getCategoryName(cat.slug, lang)}
         </a>
